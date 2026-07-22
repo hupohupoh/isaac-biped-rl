@@ -1,0 +1,53 @@
+# Isaac Lab + Biped training image
+# Based on the official Isaac Lab Dockerfile.base
+#
+# Build:
+#   docker build -t biped-train:latest -f Dockerfile.biped .
+# Export:
+#   docker save biped-train:latest -o biped-train.tar
+#   singularity build biped-train.sif docker-archive://biped-train.tar
+
+FROM nvcr.io/nvidia/isaac-sim:6.0.0
+
+ENV ISAACSIM_ROOT_PATH=/isaac-sim
+ENV DOCKER_USER_HOME=/root
+ENV HOME=/root
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ---- system deps ----
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential git wget \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# ---- carb env shim (prevents glibc crashes in multi-threaded Omniverse) ----
+RUN src=$(find ${ISAACSIM_ROOT_PATH} -name libcarb.env.shim.so -type f 2>/dev/null | head -n1) && \
+    if [ -n "${src}" ] && [ -f "${src}" ]; then \
+        install -m 0755 "${src}" /usr/local/lib/libcarb.env.shim.so && \
+        echo "/usr/local/lib/libcarb.env.shim.so" > /etc/ld.so.preload; \
+    fi
+
+# ---- Isaac Lab (via pip, no source tree needed) ----
+# Use NVIDIA index (PyPI mirror redirect for faster download in China)
+RUN ${ISAACSIM_ROOT_PATH}/python.sh -m pip install --no-cache-dir \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    --extra-index-url https://pypi.nvidia.com \
+    isaaclab \
+    rsl-rl-lib==5.4.1 \
+    && rm -rf /root/.cache/pip/*
+
+# ---- Singularity cache & driver shim dirs ----
+RUN mkdir -p \
+    ${ISAACSIM_ROOT_PATH}/kit/cache \
+    ${DOCKER_USER_HOME}/.cache/ov \
+    ${DOCKER_USER_HOME}/.cache/pip \
+    ${DOCKER_USER_HOME}/.cache/nvidia/GLCache \
+    ${DOCKER_USER_HOME}/.nv/ComputeCache \
+    ${DOCKER_USER_HOME}/.nvidia-omniverse/logs \
+    ${DOCKER_USER_HOME}/.local/share/ov/data \
+    ${DOCKER_USER_HOME}/Documents \
+    /var/run/nvidia-persistenced \
+    && touch /bin/nvidia-smi /bin/nvidia-debugdump /bin/nvidia-persistenced \
+             /bin/nvidia-cuda-mps-control /bin/nvidia-cuda-mps-server /etc/localtime
+
+WORKDIR /workspace/biped_demo

@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+logs/
+_isaac_sim/
+.vscode/.python.env
+*.egg-info/
+dist/
+build/
+
+# 容器镜像（太大，不上传 git）
+*.sif
+*.tar
+*.tar.gz
+
+# 3D 模型（USD/URDF 太大，单独传输）
+usd/
+*.usd
+*.usda
+*.usdc
+biped_clean/
+
+# WSL/Docker 残留
+.docker/
+*.vhdx
+
+# 系统文件
+.DS_Store
+Thumbs.db

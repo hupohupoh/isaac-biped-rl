@@ -1,0 +1,4 @@
+logs/
+_isaac_sim/
+__pycache__/
+.git/

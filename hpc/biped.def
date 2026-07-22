@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/isaac-sim:4.5.0
+
+%post
+    apt-get update && apt-get install -y python3-pip git
+
+    # Install Isaac Lab (matches your local version)
+    pip install isaaclab==4.5.0  \
+        --extra-index-url https://pypi.nvidia.com
+
+    pip install rsl-rl-lib==5.4.1
+
+    # Clean up
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+%environment
+    export ISAAC_PATH=/isaac-sim
+    export PYTHONPATH=/isaac-sim/kit/python/lib/python3.10/site-packages:$PYTHONPATH
+
+%runscript
+    cd /workspace/biped_demo
+    exec python scripts/rsl_rl/train.py "$@"

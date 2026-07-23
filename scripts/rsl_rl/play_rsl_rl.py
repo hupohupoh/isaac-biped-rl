@@ -134,6 +134,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
             from isaaclab.envs import multi_agent_to_single_agent
             env = multi_agent_to_single_agent(env)
 
+        # Zoom camera close to robot
+        from isaaclab.sim import SimulationContext
+        sim = SimulationContext.instance()
+        if sim is not None:
+            sim.set_camera_view(eye=(1.0, 1.5, 1.0), target=(0.0, 0.0, 0.5))
+
         if args_cli.video:
             video_kwargs = {
                 "video_folder": os.path.join(log_dir, "videos", "play"),

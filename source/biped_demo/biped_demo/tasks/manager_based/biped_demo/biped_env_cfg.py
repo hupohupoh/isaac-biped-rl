@@ -6,6 +6,8 @@ Rewards adapted from Isaac Lab's official H1 bipedal locomotion config:
     IsaacLab/source/isaaclab_tasks/isaaclab_tasks/core/velocity/config/h1/
 """
 
+import os
+
 import isaaclab.sim as sim_utils
 from isaaclab.assets import ArticulationCfg, AssetBaseCfg
 from isaaclab.envs import ManagerBasedRLEnvCfg
@@ -33,7 +35,8 @@ class BipedSceneCfg(InteractiveSceneCfg):
 
     terrain = TerrainImporterCfg(
         prim_path="/World/ground",
-        terrain_type="plane",
+        terrain_type="usd",
+        usd_path=os.path.join(os.path.dirname(__file__), "flat_ground.usda"),
         collision_group=-1,
         physics_material=sim_utils.RigidBodyMaterialCfg(
             friction_combine_mode="multiply",
@@ -192,7 +195,7 @@ class RewardsCfg:
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold": 0.6,
+            "threshold": 0.4,    # lower for small/light robots (H1=0.6 for 50kg)
         },
     )
     # Penalise both feet airborne

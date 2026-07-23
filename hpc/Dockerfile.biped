@@ -27,12 +27,15 @@ RUN src=$(find ${ISAACSIM_ROOT_PATH} -name libcarb.env.shim.so -type f 2>/dev/nu
         echo "/usr/local/lib/libcarb.env.shim.so" > /etc/ld.so.preload; \
     fi
 
-# ---- Isaac Lab (via pip, no source tree needed) ----
-# Use NVIDIA index (PyPI mirror redirect for faster download in China)
+# ---- Isaac Lab (from source, matches local version 10.0.0) ----
+COPY isaaclab_source/ /opt/isaaclab/
+
 RUN ${ISAACSIM_ROOT_PATH}/python.sh -m pip install --no-cache-dir \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple \
-    --extra-index-url https://pypi.nvidia.com \
-    isaaclab \
+    -e /opt/isaaclab/isaaclab \
+    -e /opt/isaaclab/isaaclab_assets \
+    -e /opt/isaaclab/isaaclab_mimic \
+    -e /opt/isaaclab/isaaclab_rl \
+    -e /opt/isaaclab/isaaclab_tasks \
     rsl-rl-lib==5.4.1 \
     && rm -rf /root/.cache/pip/*
 
@@ -49,5 +52,8 @@ RUN mkdir -p \
     /var/run/nvidia-persistenced \
     && touch /bin/nvidia-smi /bin/nvidia-debugdump /bin/nvidia-persistenced \
              /bin/nvidia-cuda-mps-control /bin/nvidia-cuda-mps-server /etc/localtime
+
+# HPC Singularity runs as host user, not root — open up all critical dirs
+RUN chmod -R a+rwX ${ISAACSIM_ROOT_PATH} /root /workspace 2>/dev/null || true
 
 WORKDIR /workspace/biped_demo

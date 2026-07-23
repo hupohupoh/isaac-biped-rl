@@ -1,0 +1,699 @@
+WARNING: While bind mounting '/share/home/2242211591/biped_demo:/workspace/biped_demo': destination is already in the mount point list
+WARNING: While bind mounting '/share/home/2242211591/IsaacLab/source:/opt/isaaclab_source': destination is already in the mount point list
+The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: biped-sandbox] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/biped-sandbox' or '/share/home/2242211591/biped-sandbox/config'
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: .mozilla] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.mozilla' or '/share/home/2242211591/.mozilla/config'
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: .cache] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.cache' or '/share/home/2242211591/.cache/config'
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: biped_demo] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/biped_demo' or '/share/home/2242211591/biped_demo/config'
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: .pki] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.pki' or '/share/home/2242211591/.pki/config'
+2026-07-23T05:03:00Z [0ms] [Warning] [omni.ext.plugin] [ext: IsaacLab] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/IsaacLab' or '/share/home/2242211591/IsaacLab/config'
+2026-07-23T05:03:00Z [1ms] [Warning] [omni.ext.plugin] [ext: .config] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.config' or '/share/home/2242211591/.config/config'
+2026-07-23T05:03:00Z [1ms] [Warning] [omni.ext.plugin] [ext: .nv] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.nv' or '/share/home/2242211591/.nv/config'
+2026-07-23T05:03:00Z [2ms] [Warning] [omni.ext.plugin] [ext: .local] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.local' or '/share/home/2242211591/.local/config'
+2026-07-23T05:03:00Z [3ms] [Warning] [omni.ext.plugin] [ext: .nvidia-omniverse] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.nvidia-omniverse' or '/share/home/2242211591/.nvidia-omniverse/config'
+2026-07-23T05:03:00Z [4ms] [Warning] [omni.ext.plugin] [ext: .ssh] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.ssh' or '/share/home/2242211591/.ssh/config'
+2026-07-23T05:03:00Z [9ms] [Warning] [omni.ext.plugin] [ext: .singularity] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/.singularity' or '/share/home/2242211591/.singularity/config'
+2026-07-23T05:03:00Z [9ms] [Warning] [omni.ext.plugin] [ext: isaac_assets] Extensions config 'extension.toml' doesn't exist '/share/home/2242211591/isaac_assets' or '/share/home/2242211591/isaac_assets/config'
+2026-07-23T05:03:03Z [3,159ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,231ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,312ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,404ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,505ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,617ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,738ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:03Z [3,870ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,011ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,163ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,324ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,496ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,677ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:04Z [4,869ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:05Z [5,070ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:05Z [5,282ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:05Z [5,503ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:05Z [5,734ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:06Z [5,976ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1784782993.535590   47894 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1784782993.535628   47894 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-07-23T05:03:06Z [6,228ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:06Z [6,490ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:06Z [6,762ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:07Z [7,043ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:07Z [7,335ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:07Z [7,637ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:08Z [7,947ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:08Z [8,269ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:08Z [8,601ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:09Z [8,942ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:09Z [9,293ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:09Z [9,655ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:10Z [10,027ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:10Z [10,408ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:10Z [10,799ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:11Z [11,200ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:11Z [11,612ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:12Z [12,034ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:12Z [12,466ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:12Z [12,907ms] [Warning] [carb.omniclient.plugin]  47999: OmniHub: ThreadId(02) Hub encountered error. Trying to reconnect to Hub. retry_reason="Hub failed to launch: Io(\"child exited with exit status: 1 without writing file \\\"/tmp/hub-2242211591-BEB4CFCC.config.json\\\"\")"
+2026-07-23T05:03:13Z [13,495ms] [Error] [omni.datastore] Failed to acquire exclusive lock to data store (256>=256)
+2026-07-23T05:03:13Z [13,495ms] [Error] [omni.datastore] Failed to create local file data store at '/isaac-sim/kit/cache/DerivedDataCache'
+2026-07-23T05:03:13Z [13,906ms] [Warning] [omni.perfmonitor.plugin]  PerfMonitorManager::onStart - error calling pthread_setaffinity_np
+2026-07-23T05:03:14Z [13,975ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-07-23T05:03:14Z [13,987ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-07-23T05:03:15Z [15,838ms] [Error] [omni.kit.stage_templates.new_stage] Failed to create directory /isaac-sim/kit/data/documents/Kit/apps/IsaacLab/scripts/new_stage
+2026-07-23T05:03:16Z [16,279ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-07-23T05:03:16Z [16,279ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-07-23T05:03:16Z [16,888ms] [Error] [carb.scripting-python.plugin] RuntimeError: Unable to run git asset repository command: git clone --depth 1 https://github.com/newton-physics/newton-assets.git /tmp/asset_cache/newton-assets
+
+At:
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/utils/assets.py(219): _run_git_command
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/utils/assets.py(148): _get_git_asset_dir
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/utils/assets.py(109): retrieve_git_asset_path
+  /share/home/2242211591/IsaacLab/source/isaaclab_assets/isaaclab_assets/robots/fourbar_pole.py(13): <module>
+  <frozen importlib._bootstrap>(488): _call_with_frames_removed
+  <frozen importlib._bootstrap_external>(999): exec_module
+  <frozen importlib._bootstrap>(950): _load_unlocked
+  <frozen importlib._bootstrap>(1334): _find_and_load_unlocked
+  <frozen importlib._bootstrap>(1360): _find_and_load
+  <frozen importlib._bootstrap>(1387): _gcd_import
+  /isaac-sim/kit/python/lib/python3.12/importlib/__init__.py(90): import_module
+  /isaac-sim/kit/python/lib/python3.12/site-packages/lazy_loader/__init__.py(78): __getattr__
+  /isaac-sim/kit/python/lib/python3.12/site-packages/lazy_loader/__init__.py(79): __getattr__
+  /isaac-sim/kit/kernel/py/omni/ext/_impl/_internal.py(247): startup
+  /isaac-sim/kit/kernel/py/omni/ext/_impl/_internal.py(366): startup_extension
+  PythonExtension.cpp::startup()(2): <module>
+  /isaac-sim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py(574): _start_app
+  /isaac-sim/exts/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py(287): __init__
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/app/app_launcher.py(1235): _create_app
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/app/app_launcher.py(307): __init__
+  /share/home/2242211591/IsaacLab/source/isaaclab/isaaclab/app/sim_launcher.py(458): launch_simulation
+  /isaac-sim/kit/python/lib/python3.12/contextlib.py(137): __enter__
+  /workspace/biped_demo/scripts/rsl_rl/train.py(102): main
+  /share/home/2242211591/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/utils/hydra.py(504): <lambda>
+  /share/home/2242211591/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/utils/hydra.py(445): _run_hydra
+  /share/home/2242211591/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/utils/hydra.py(504): wrapper
+  /workspace/biped_demo/scripts/rsl_rl/train.py(188): <module>
+
+2026-07-23T05:03:16Z [16,888ms] [Error] [omni.ext.plugin] [ext: isaaclab_assets-0.4.2] Failed to startup python extension.
+2026-07-23T05:03:17Z [17,409ms] [Error] [omni.kit.app.plugin] failed to open file '/isaac-sim/kit/data/Kit/IsaacLab/3.0/user.config.json' - unable to save the dictionary
+[ISAACLAB] AppLauncher initialization complete
+[ISAACLAB] Kit version: 110.1.1+production.305458.6312fa25.gl
+[ISAACLAB] Kit kernel:  210.1.5+release.12978.b22b555f.gl
+[ISAACLAB] Kit hash:    6312fa25
+2026-07-23T05:03:20Z [20,129ms] [Warning] [isaaclab_physx.physics.physx_manager] TGS solver with enable_external_forces_every_iteration=False may cause noisy velocities.
+2026-07-23T05:03:20Z [20,130ms] [Error] [omni.kit.app.plugin] failed to open file '/isaac-sim/kit/data/Kit/IsaacLab/3.0/user.config.json' - unable to save the dictionary
+[INFO]: Parsing configuration from: biped_demo.tasks.manager_based.biped_demo.biped_velocity:BipedVelocityEnvCfg
+[INFO]: Parsing configuration from: biped_demo.tasks.manager_based.biped_demo.agents.rsl_rl_ppo_cfg:PPORunnerCfg
+[INFO] Logging experiment in directory: /share/home/2242211591/logs/rsl_rl/biped_demo
+Exact experiment name requested from command line: 2026-07-23_13-03-18
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO]: Registered backend 'physx' for factory Articulation.
+[INFO]: Registered backend 'physx' for factory FrameView.
+[INFO]: Registered backend 'physx' for factory ContactSensor.
+[INFO]: Physics scene prim path: /physicsScene
+[INFO]: Time taken for scene creation Last: 4.117145 s, Mean: 4.117145 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 4
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                    Simulation Joint Information (Prim path: /World/envs/env_.*/Robot)                                                    |
++-------+---------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+| Index | Name                | Stiffness | Damping | Armature | Static Friction | Dynamic Friction | Viscous Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+---------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+|   0   | r_leg_pitch_joint   |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   1   | l_leg_pitch_joint   |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   2   | r_leg_roll_joint    |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 0.500] |      10.000     |    1.0e+09    |
+|   3   | l_leg_roll_joint    |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-0.500, 1.570] |      10.000     |    1.0e+09    |
+|   4   | r_leg_yaw_joint     |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   5   | l_leg_yaw_joint     |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   6   | r_knee_pitch_joint  |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   7   | l_knee_pitch_joint  |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-1.570, 1.570] |      10.000     |    1.0e+09    |
+|   8   | r_ankle_pitch_joint |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-0.500, 0.500] |      10.000     |    1.0e+09    |
+|   9   | l_ankle_pitch_joint |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-0.500, 0.500] |      10.000     |    1.0e+09    |
+|   10  | r_ankle_roll_joint  |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-0.500, 0.500] |      10.000     |    1.0e+09    |
+|   11  | l_ankle_roll_joint  |   0.000   |  0.000  |  0.000   |      0.010      |      0.000       |      0.000       | [-0.500, 0.500] |      10.000     |    1.0e+09    |
++-------+---------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+2026-07-23T05:03:25Z [25,632ms] [Warning] [omni.physx.plugin] Cloning joints /World/envs/env_1/Robot/Physics/root_joint without a body rel may cause issues, since the localPose wont be updated.
+2026-07-23T05:03:25Z [25,632ms] [Warning] [omni.physx.plugin] Cloning joints /World/envs/env_2/Robot/Physics/root_joint without a body rel may cause issues, since the localPose wont be updated.
+2026-07-23T05:03:25Z [25,633ms] [Warning] [omni.physx.plugin] Cloning joints /World/envs/env_3/Robot/Physics/root_joint without a body rel may cause issues, since the localPose wont be updated.
+2026-07-23T05:03:26Z [26,278ms] [Warning] [usdrt.population.plugin] Last global time was not created. Did you call setEnableUsdNoticeHandling?
+2026-07-23T05:03:26Z [26,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find articulation at '/World/envs/env_0/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:26Z [26,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find articulation at '/World/envs/env_1/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:26Z [26,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find articulation at '/World/envs/env_2/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:26Z [26,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find articulation at '/World/envs/env_3/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_0/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_1/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_2/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,612ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,613ms] [Warning] [omni.physx.tensors.plugin] Failed to find rigid body at '/World/envs/env_3/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_0/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+[INFO]: Time taken for simulation start Last: 10.847621 s, Mean: 10.847621 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++------------------------------------------------+
+|              Active Command Terms              |
++-------+---------------+------------------------+
+| Index | Name          |          Type          |
++-------+---------------+------------------------+
+|   0   | base_velocity | UniformVelocityCommand |
++-------+---------------+------------------------+
+
+[INFO] Event Manager:  <EventManager> contains 2 active terms.
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
++---------------------------------------+
+| Active Event Terms in Mode: 'startup' |
++----------+----------------------------+
+|  Index   | Name                       |
++----------+----------------------------+
+|    0     | randomize_friction         |
++----------+----------------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['r_leg_pitch_joint', 'l_leg_pitch_joint', 'r_leg_roll_joint', 'l_leg_roll_joint', 'r_leg_yaw_joint', 'l_leg_yaw_joint', 'r_knee_pitch_joint', 'l_knee_pitch_joint', 'r_ankle_pitch_joint', 'l_ankle_pitch_joint', 'r_ankle_roll_joint', 'l_ankle_roll_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]]
+/isaac-sim/kit/python/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/isaac-sim/kit/python/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/isaac-sim/kit/python/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+[INFO] Action Manager:  <ActionManager> contains 1 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 12)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          12 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++---------------------------------------------------------+
+| Active Observation Terms in Group: 'policy' (shape: (48,)) |
++-----------+---------------------------------+-----------+
+|   Index   | Name                            |   Shape   |
++-----------+---------------------------------+-----------+
+|     0     | base_lin_vel                    |    (3,)   |
+|     1     | base_ang_vel                    |    (3,)   |
+|     2     | projected_gravity               |    (3,)   |
+|     3     | velocity_commands               |    (3,)   |
+|     4     | joint_pos                       |   (12,)   |
+|     5     | joint_vel                       |   (12,)   |
+|     6     | actions                         |   (12,)   |
++-----------+---------------------------------+-----------+
++-------------------------------------------------------------+
+| Active Observation Terms in Group: 'privileged' (shape: (11,)) |
++------------+-----------------------------------+------------+
+|   Index    | Name                              |   Shape    |
++------------+-----------------------------------+------------+
+|     0      | base_lin_vel_truth                |    (3,)    |
+|     1      | foot_contact                      |    (2,)    |
+|     2      | foot_grf                          |    (6,)    |
++------------+-----------------------------------+------------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++------------------------------------+
+|      Active Termination Terms      |
++-------+-----------------+----------+
+| Index | Name            | Time Out |
++-------+-----------------+----------+
+|   0   | time_out        |   True   |
+|   1   | bad_orientation |  False   |
++-------+-----------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 7 active terms.
++---------------------------------------+
+|          Active Reward Terms          |
++-------+----------------------+--------+
+| Index | Name                 | Weight |
++-------+----------------------+--------+
+|   0   | track_lin_vel_xy_exp |    2.0 |
+|   1   | track_ang_vel_z_exp  |    1.0 |
+|   2   | termination_penalty  | -200.0 |
+|   3   | flat_orientation_l2  |   -1.0 |
+|   4   | feet_air_time        |    1.0 |
+|   5   | desired_contacts     |   -0.5 |
+|   6   | action_rate_l2       |  -0.01 |
++-------+----------------------+--------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 0 active terms.
++----------------------+
+| Active Curriculum Terms |
++-----------+----------+
+|   Index   | Name     |
++-----------+----------+
++-----------+----------+
+
+[INFO]: Completed setting up the environment...
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['policy']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=48, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=12, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=48, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=64, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=64, out_features=1, bias=True)
+  )
+)
+Could not find git repository in /isaac-sim/kit/python/lib/python3.12/site-packages/rsl_rl/__init__.py. Skipping.
+Could not find git repository in /workspace/biped_demo/scripts/rsl_rl/train.py. Skipping.
+################################################################################
+[1m                            Learning iteration 0/10                             [0m 
+
+                            Total steps: 496 
+                       Steps per second: 39 
+                        Collection time: 10.416s 
+                          Learning time: 2.109s 
+                        Mean value loss: 0.0877
+                    Mean surrogate loss: 0.1704
+                      Mean entropy loss: 17.0306
+                            Mean reward: 1.18
+                    Mean episode length: 114.00
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.0451
+    Metrics/base_velocity/error_vel_yaw: 0.0496
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.0074
+        Episode_Reward/desired_contacts: -0.0046
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.0222
+     Episode_Reward/track_ang_vel_z_exp: 0.0051
+          Episode_Reward/action_rate_l2: -0.0027
+           Episode_Reward/feet_air_time: 0.0000
+                   Metrics/success_rate: 0.9113
+--------------------------------------------------------------------------------
+                         Iteration time: 12.52s
+                           Time elapsed: 0:00:12
+                                    ETA: 0:01:52
+
+################################################################################
+[1m                            Learning iteration 1/10                             [0m 
+
+                            Total steps: 992 
+                       Steps per second: 89 
+                        Collection time: 5.327s 
+                          Learning time: 0.205s 
+                        Mean value loss: 0.0628
+                    Mean surrogate loss: -0.0334
+                      Mean entropy loss: 17.0325
+                            Mean reward: 2.75
+                    Mean episode length: 125.50
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.2247
+    Metrics/base_velocity/error_vel_yaw: 0.5377
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.2205
+        Episode_Reward/desired_contacts: -0.0547
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.4758
+     Episode_Reward/track_ang_vel_z_exp: 0.0684
+          Episode_Reward/action_rate_l2: -0.0338
+           Episode_Reward/feet_air_time: 0.0003
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.53s
+                           Time elapsed: 0:00:18
+                                    ETA: 0:01:12
+
+################################################################################
+[1m                            Learning iteration 2/10                             [0m 
+
+                            Total steps: 1488 
+                       Steps per second: 89 
+                        Collection time: 5.298s 
+                          Learning time: 0.272s 
+                        Mean value loss: 0.0760
+                    Mean surrogate loss: -0.0411
+                      Mean entropy loss: 17.0326
+                            Mean reward: 3.34
+                    Mean episode length: 190.67
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.2960
+    Metrics/base_velocity/error_vel_yaw: 0.5320
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.2622
+        Episode_Reward/desired_contacts: -0.0915
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.6048
+     Episode_Reward/track_ang_vel_z_exp: 0.1045
+          Episode_Reward/action_rate_l2: -0.0556
+           Episode_Reward/feet_air_time: 0.0004
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.57s
+                           Time elapsed: 0:00:23
+                                    ETA: 0:00:55
+
+################################################################################
+[1m                            Learning iteration 3/10                             [0m 
+
+                            Total steps: 1984 
+                       Steps per second: 95 
+                        Collection time: 4.905s 
+                          Learning time: 0.269s 
+                        Mean value loss: 0.0838
+                    Mean surrogate loss: -0.0401
+                      Mean entropy loss: 17.0324
+                            Mean reward: 3.34
+                    Mean episode length: 190.67
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4368
+    Metrics/base_velocity/error_vel_yaw: 0.5273
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.2997
+        Episode_Reward/desired_contacts: -0.1420
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.7500
+     Episode_Reward/track_ang_vel_z_exp: 0.1528
+          Episode_Reward/action_rate_l2: -0.0853
+           Episode_Reward/feet_air_time: 0.0004
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.17s
+                           Time elapsed: 0:00:28
+                                    ETA: 0:00:43
+
+################################################################################
+[1m                            Learning iteration 4/10                             [0m 
+
+                            Total steps: 2480 
+                       Steps per second: 95 
+                        Collection time: 4.974s 
+                          Learning time: 0.240s 
+                        Mean value loss: 0.0733
+                    Mean surrogate loss: -0.0360
+                      Mean entropy loss: 17.0319
+                            Mean reward: 3.34
+                    Mean episode length: 190.67
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4368
+    Metrics/base_velocity/error_vel_yaw: 0.5273
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.2997
+        Episode_Reward/desired_contacts: -0.1420
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.7500
+     Episode_Reward/track_ang_vel_z_exp: 0.1528
+          Episode_Reward/action_rate_l2: -0.0853
+           Episode_Reward/feet_air_time: 0.0004
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.21s
+                           Time elapsed: 0:00:34
+                                    ETA: 0:00:34
+
+################################################################################
+[1m                            Learning iteration 5/10                             [0m 
+
+                            Total steps: 2976 
+                       Steps per second: 91 
+                        Collection time: 5.202s 
+                          Learning time: 0.226s 
+                        Mean value loss: 0.0922
+                    Mean surrogate loss: -0.0405
+                      Mean entropy loss: 17.0318
+                            Mean reward: 3.34
+                    Mean episode length: 190.67
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4368
+    Metrics/base_velocity/error_vel_yaw: 0.5273
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.2997
+        Episode_Reward/desired_contacts: -0.1420
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.7500
+     Episode_Reward/track_ang_vel_z_exp: 0.1528
+          Episode_Reward/action_rate_l2: -0.0853
+           Episode_Reward/feet_air_time: 0.0004
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.43s
+                           Time elapsed: 0:00:39
+                                    ETA: 0:00:26
+
+################################################################################
+[1m                            Learning iteration 6/10                             [0m 
+
+                            Total steps: 3472 
+                       Steps per second: 94 
+                        Collection time: 5.030s 
+                          Learning time: 0.229s 
+                        Mean value loss: 0.0811
+                    Mean surrogate loss: -0.0341
+                      Mean entropy loss: 17.0319
+                            Mean reward: 4.42
+                    Mean episode length: 339.00
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4569
+    Metrics/base_velocity/error_vel_yaw: 0.7272
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.5745
+        Episode_Reward/desired_contacts: -0.2750
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 0.9214
+     Episode_Reward/track_ang_vel_z_exp: 0.2110
+          Episode_Reward/action_rate_l2: -0.1782
+           Episode_Reward/feet_air_time: 0.0013
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.26s
+                           Time elapsed: 0:00:44
+                                    ETA: 0:00:19
+
+################################################################################
+[1m                            Learning iteration 7/10                             [0m 
+
+                            Total steps: 3968 
+                       Steps per second: 92 
+                        Collection time: 5.100s 
+                          Learning time: 0.237s 
+                        Mean value loss: 0.0652
+                    Mean surrogate loss: -0.0380
+                      Mean entropy loss: 17.0307
+                            Mean reward: 4.42
+                    Mean episode length: 339.00
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4661
+    Metrics/base_velocity/error_vel_yaw: 0.8189
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.7006
+        Episode_Reward/desired_contacts: -0.3360
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 1.0000
+     Episode_Reward/track_ang_vel_z_exp: 0.2377
+          Episode_Reward/action_rate_l2: -0.2208
+           Episode_Reward/feet_air_time: 0.0017
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.34s
+                           Time elapsed: 0:00:50
+                                    ETA: 0:00:12
+
+################################################################################
+[1m                            Learning iteration 8/10                             [0m 
+
+                            Total steps: 4464 
+                       Steps per second: 95 
+                        Collection time: 4.952s 
+                          Learning time: 0.215s 
+                        Mean value loss: 0.0942
+                    Mean surrogate loss: -0.0354
+                      Mean entropy loss: 17.0300
+                            Mean reward: 3.81
+                    Mean episode length: 471.20
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.4698
+    Metrics/base_velocity/error_vel_yaw: 0.8252
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 0.6979
+        Episode_Reward/desired_contacts: -0.3371
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 1.0000
+     Episode_Reward/track_ang_vel_z_exp: 0.2356
+          Episode_Reward/action_rate_l2: -0.2227
+           Episode_Reward/feet_air_time: 0.0018
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.17s
+                           Time elapsed: 0:00:55
+                                    ETA: 0:00:06
+
+################################################################################
+[1m                            Learning iteration 9/10                             [0m 
+
+                            Total steps: 4960 
+                       Steps per second: 93 
+                        Collection time: 5.087s 
+                          Learning time: 0.231s 
+                        Mean value loss: 0.0442
+                    Mean surrogate loss: -0.0450
+                      Mean entropy loss: 17.0300
+                            Mean reward: 8.70
+                    Mean episode length: 559.33
+                        Mean action std: 1.00
+     Episode_Reward/termination_penalty: 0.0000
+     Metrics/base_velocity/error_vel_xy: 0.1598
+    Metrics/base_velocity/error_vel_yaw: 0.7994
+     Episode_Reward/flat_orientation_l2: -0.0000
+    Episode_Reward/track_lin_vel_xy_exp: 1.7337
+        Episode_Reward/desired_contacts: -0.3663
+    Episode_Termination/bad_orientation: 0.0000
+           Episode_Termination/time_out: 1.0000
+     Episode_Reward/track_ang_vel_z_exp: 0.3209
+          Episode_Reward/action_rate_l2: -0.2885
+           Episode_Reward/feet_air_time: 0.0010
+                   Metrics/success_rate: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 5.32s
+                           Time elapsed: 0:01:00
+                                    ETA: 0:00:00
+
+Training time: 65.8 seconds
+[INFO]: SimulationContext cleared
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_1/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,614ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_2/Robot/Geometry/base_link/base_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_roll_link/r_ankle_roll_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_ankle_pitch_link/r_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_knee_pitch_link/r_knee_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_yaw_link/r_leg_yaw_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_roll_link/r_leg_roll_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/r_leg_pitch_link/r_leg_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_roll_link/l_ankle_roll_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_ankle_pitch_link/l_ankle_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_knee_pitch_link/l_knee_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_yaw_link/l_leg_yaw_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_roll_link/l_leg_roll_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/l_leg_pitch_link/l_leg_pitch_link'
+2026-07-23T05:03:34Z [34,615ms] [Warning] [omni.physx.tensors.plugin] Failed to find contact report API at '/World/envs/env_3/Robot/Geometry/base_link/base_link'

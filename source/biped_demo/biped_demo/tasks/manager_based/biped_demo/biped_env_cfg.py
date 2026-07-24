@@ -6,6 +6,7 @@ Rewards adapted from Isaac Lab's official H1 bipedal locomotion config:
     IsaacLab/source/isaaclab_tasks/isaaclab_tasks/core/velocity/config/h1/
 """
 
+import math
 import os
 
 import isaaclab.sim as sim_utils
@@ -21,6 +22,13 @@ from isaaclab.scene import InteractiveSceneCfg
 from isaaclab.sensors import ContactSensorCfg
 from isaaclab.terrains import TerrainImporterCfg
 from isaaclab.utils.configclass import configclass
+
+# Isaac Lab renamed UniformNoiseCfg → AdditiveUniformNoiseCfg across versions.
+# Both classes share the same API (n_min, n_max).
+try:
+    from isaaclab.utils.noise import AdditiveUniformNoiseCfg as Unoise
+except ImportError:
+    from isaaclab.utils.noise import UniformNoiseCfg as Unoise
 
 from .assets.robot.biped import BIPED_CFG as RobotCFG
 from . import mdp
@@ -66,12 +74,12 @@ class BipedSceneCfg(InteractiveSceneCfg):
 
 @configclass
 class ActionsCfg:
-    """Position targets for all 12 leg joints.  scale=0.5 → ±0.5 rad range."""
+    """Position targets for all 12 leg joints. scale=0.25 → ±0.25 rad range."""
 
     joint_pos = mdp.JointPositionActionCfg(
         asset_name="robot",
         joint_names=[".*"],
-        scale=0.5,
+        scale=0.25,
         use_default_offset=True,
     )
 
@@ -85,20 +93,40 @@ class ObservationsCfg:
 
     @configclass
     class PolicyCfg(ObsGroup):
-        """Student observations — what the real robot can measure."""
-        base_lin_vel = ObsTerm(func=mdp.base_lin_vel)
-        base_ang_vel = ObsTerm(func=mdp.base_ang_vel)
-        projected_gravity = ObsTerm(func=mdp.projected_gravity)
+        """Student observations — what the real robot can measure.
+
+        Observation noise simulates real sensor errors and prevents
+        the policy from overfitting to perfect simulator readings.
+        """
+
+        base_lin_vel = ObsTerm(
+            func=mdp.base_lin_vel,
+            noise=Unoise(n_min=-0.1, n_max=0.1),
+        )
+        base_ang_vel = ObsTerm(
+            func=mdp.base_ang_vel,
+            noise=Unoise(n_min=-0.2, n_max=0.2),
+        )
+        projected_gravity = ObsTerm(
+            func=mdp.projected_gravity,
+            noise=Unoise(n_min=-0.05, n_max=0.05),
+        )
         velocity_commands = ObsTerm(
             func=mdp.generated_commands,
             params={"command_name": "base_velocity"},
         )
-        joint_pos = ObsTerm(func=mdp.joint_pos_rel)
-        joint_vel = ObsTerm(func=mdp.joint_vel_rel)
+        joint_pos = ObsTerm(
+            func=mdp.joint_pos_rel,
+            noise=Unoise(n_min=-0.01, n_max=0.01),
+        )
+        joint_vel = ObsTerm(
+            func=mdp.joint_vel_rel,
+            noise=Unoise(n_min=-1.5, n_max=1.5),
+        )
         actions = ObsTerm(func=mdp.last_action)
 
         def __post_init__(self) -> None:
-            self.enable_corruption = False
+            self.enable_corruption = True
             self.concatenate_terms = True
 
     @configclass
@@ -154,67 +182,90 @@ class CommandsCfg:
 
 
 # ── Rewards ───────────────────────────────────────────────────────────────────
-# Keep it simple: velocity tracking + don't fall + don't shake.
-# Too many penalty terms paralyse the policy — add them back one at a time
-# once the basic gait converges.
+# Balanced reward design (adapted from both IsaacLab official H1 and unitree_rl_lab H1):
+#
+#   Positive sum ≈ 1.0 + 0.5 + 0.1 + 0.25 = 1.85
+#   Penalty sum ≈ -200(term) -1.0 -1.0 -0.05 -5.0 -1.0 -0.2 -0.1 -0.005 -1.0 ≈ -210
+#
+# The ratio of penalties to positives (~100:1) forces the policy to stay
+# within safe/stable operating bounds — it can't just maximize velocity
+# tracking while ignoring posture and joint health.
 
 
 @configclass
 class RewardsCfg:
-    """Bipedal locomotion rewards — simplified for reliable convergence."""
+    """Bipedal locomotion rewards — balanced for gradual, stable convergence."""
 
-    # ── 1. Velocity tracking (the ONLY positive rewards) ──────────────────
+    # ── 1. Velocity tracking (the ONLY strong positive rewards) ─────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=2.0,
-        params={"command_name": "base_velocity", "std": 0.5},
+        weight=1.0,
+        params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_exp,
-        weight=1.0,
-        params={"command_name": "base_velocity", "std": 0.5},
+        weight=0.5,
+        params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
-    # ── 2. Survival ───────────────────────────────────────────────────────
+    # ── 2. Survival ────────────────────────────────────────────────────
+    alive = RewTerm(func=mdp.is_alive, weight=0.1)
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
 
-    # ── 3. Posture ────────────────────────────────────────────────────────
-    flat_orientation_l2 = RewTerm(
-        func=mdp.flat_orientation_l2,
-        weight=-1.0,
+    # ── 3. Posture (keep upright, don't bounce, don't wobble) ──────────
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.0)
+    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-1.0)
+    ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
+    base_height_l2 = RewTerm(
+        func=mdp.base_height_l2,
+        weight=-5.0,
+        params={"target_height": 0.35},   # robot's standing base height (~45cm tall)
     )
 
-    # ── 4. Gait — alternating steps, symmetric stride ─────────────────────
-    # +reward for exactly-one-foot-on-ground time → natural alternating gait
+    # ── 4. Joint regularization ────────────────────────────────────────
+    dof_pos_limits = RewTerm(
+        func=mdp.joint_pos_limits,
+        weight=-1.0,
+        params={"asset_cfg": SceneEntityCfg("robot")},
+    )
+    joint_deviation_hips = RewTerm(
+        func=mdp.joint_deviation_l1,
+        weight=-0.2,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[".*_leg_roll_joint", ".*_leg_yaw_joint"],
+            ),
+        },
+    )
+
+    # ── 5. Feet — gait + ground interaction ────────────────────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=1.0,
+        weight=0.25,
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold": 0.4,    # lower for small/light robots (H1=0.6 for 50kg)
+            "threshold": 0.3,     # lower than H1 (0.4) — small light robot
         },
     )
-    # Penalise both feet airborne
-    desired_contacts = RewTerm(
-        func=mdp.desired_contacts,
-        weight=-0.5,
+    # ── 6. Smoothness ──────────────────────────────────────────────────
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
+
+    # ── 7. Safety — body parts shouldn't touch ground ──────────────────
+    undesired_contacts = RewTerm(
+        func=mdp.undesired_contacts,
+        weight=-1.0,
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
-                body_names=[".*_ankle_roll_link"],
+                body_names=["(?!.*ankle_roll_link).*"],
             ),
-            "threshold": 2.0,
+            "threshold": 1.0,
         },
-    )
-
-    # ── 5. Smoothness ─────────────────────────────────────────────────────
-    action_rate_l2 = RewTerm(
-        func=mdp.action_rate_l2,
-        weight=-0.01,
     )
 
 
@@ -228,7 +279,17 @@ class TerminationsCfg:
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     bad_orientation = DoneTerm(
         func=mdp.bad_orientation,
-        params={"limit_angle": 0.7},   # ~40° tilt → dead
+        params={"limit_angle": 1.0},   # ~57° tilt → dead (wider for small robot)
+    )
+    base_contact = DoneTerm(
+        func=mdp.illegal_contact,
+        params={
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=["base_link"],
+            ),
+            "threshold": 1.0,
+        },
     )
 
 
@@ -237,7 +298,7 @@ class TerminationsCfg:
 
 @configclass
 class EventCfg:
-    """Domain randomisation."""
+    """Domain randomisation for robust sim-to-real transfer."""
 
     # Reset base pose with small random offset
     reset_base = EventTerm(
@@ -256,16 +317,27 @@ class EventCfg:
         },
     )
 
-    # Randomise foot friction at startup: 80% grippy 0.8-0.95, 20% slippery 0.65-0.8
+    # Randomise foot friction at startup — wide range prevents overfitting
     randomize_friction = EventTerm(
         func=mdp.randomize_rigid_body_material,
         mode="startup",
         params={
-            "asset_cfg": SceneEntityCfg("robot", body_names=[".*_ankle_roll_link"]),
-            "static_friction_range": (0.65, 0.95),
-            "dynamic_friction_range": (0.65, 0.95),
+            "asset_cfg": SceneEntityCfg("robot", body_names=".*"),
+            "static_friction_range": (0.3, 1.0),
+            "dynamic_friction_range": (0.3, 1.0),
             "restitution_range": (0.0, 0.0),
-            "num_buckets": 256,
+            "num_buckets": 64,
+        },
+    )
+
+    # Randomise base mass — simulates payload/battery variance
+    add_base_mass = EventTerm(
+        func=mdp.randomize_rigid_body_mass,
+        mode="startup",
+        params={
+            "asset_cfg": SceneEntityCfg("robot", body_names="base_link"),
+            "mass_distribution_params": (-0.2, 0.5),  # -0.2~+0.5 kg for 3.4 kg robot
+            "operation": "add",
         },
     )
 

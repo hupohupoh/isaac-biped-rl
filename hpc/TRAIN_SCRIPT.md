@@ -1,10 +1,12 @@
 # HPC 训练脚本说明
 
-> 2026-07-23 | 4096 环境，Isaac Lab 10.0.0 + Isaac Sim 6.0.0，成功运行
+> 2026-07-24 | v2 配方 | Isaac Lab 10.0.0 + Isaac Sim 6.0.0 | 4096 envs
 
 ---
 
-## 脚本
+## 当前脚本（v2）
+
+PPO 参数对齐 Isaac Lab 官方 H1 4096-env 配置。详见 `mdguide/PPO_COLLAPSE_FIX.md`。
 
 ```bash
 #!/bin/bash
@@ -14,10 +16,10 @@
 #SBATCH -c 4
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
-#SBATCH -t 48:00:00
-#SBATCH -J biped_train
-#SBATCH -o train_%j.log
-#SBATCH -e train_%j.log
+#SBATCH -t 72:00:00
+#SBATCH -J biped_v2
+#SBATCH -o train_v2_%j.log
+#SBATCH -e train_v2_%j.log
 
 ISAACLAB_PATHS=$(find $HOME/IsaacLab/source -maxdepth 1 -mindepth 1 -type d | tr '\n' ':')
 export SINGULARITYENV_PYTHONPATH="$HOME/.local/lib/python3.12/site-packages:${ISAACLAB_PATHS}"
@@ -32,35 +34,40 @@ singularity exec --nv \
     /isaac-sim/python.sh /workspace/biped_demo/scripts/rsl_rl/train.py \
     --task Biped-velocity-v0 \
     --num_envs 4096 \
-    --max_iterations 5000 \
+    --max_iterations 15000 \
     --headless
 ```
 
 ---
 
-## 成功关键
+## v2 PPO 参数 vs v1
 
-| 配置 | 问题 | 为什么关键 |
-|------|------|------------|
-| `--env DISPLAY=:0` | OmniHub 后台线程调 `XOpenDisplay` → segfault 崩溃 | 骗过 Omniverse 平台检测，告诉它"有显示" |
-| `--env QT_QPA_PLATFORM=offscreen` | Qt 尝试打开 X11 显示 → 崩溃 | 强制 Qt 用离屏模式，不碰物理显示 |
-| `--bind /dev/shm:/dev/shm` | 容器内 `/dev/shm` 太小（SIF 默认 64MB）→ SIGBUS | 挂载宿主机 `/dev/shm`，4096 环境共享内存够用 |
-| `--mem=64G` | 32G 不够 4096 环境 | 4096 个 PhysX 刚体缓冲 + PyTorch 模型 ≈ 40-50G |
-| `--mem=32G`（测试用） | 4 环境测试够用 | 测试阶段不需要大内存 |
-| PYTHONPATH 注入 | 容器 isaaclab 版本太老/API 不匹配 | 用宿主 isaaclab 10.0.0 源码覆盖容器内置版本 |
-| `.kit` 文件 `asset_root.cloud` 改本地 | 计算节点无外网，S3 资产拉不下来 | 改为本地路径 + 下载对应 USD 文件 |
-| `terrain_type="usd"` + 本地 usda | `terrain_type="plane"` 走 GroundPlaneCfg 调 S3 URL | 完全绕过云端资产依赖 |
-| Torch 2.5.1 cu124（用户目录） | 容器内置 torch 2.11 需要 CUDA 12.8，HPC 驱动只到 12.4 | 在 `~/.local` 装兼容版本，通过 PYTHONPATH 覆盖 |
+| 参数 | v1（崩溃） | v2（当前） | 依据 |
+|------|-----------|-----------|------|
+| `num_steps_per_env` | 124 | **24** | H1 官方 4096-env |
+| `entropy_coef` | 0.005 | **0.01** | H1 官方值 |
+| `std_range` | (0.15, 1.0) | **(0.05, 10.0)** | 上限放开，防 sigma 僵化 |
+| `critic dims` | [256,128,64] | **[512,256,128]** | H1 官方值 |
+| `max_iterations` | 5000 | **15000** | 24步需更多轮 |
 
 ---
 
-## 注意事项
+## 成功关键（SLURM/容器层）
 
-1. **不要删除 `train_*.log`** — 删除后无法实时看训练输出，只能通过 checkpoint 文件判断进度
-2. **实时监控**：
-   ```bash
-   tail -f ~/train_1623303.log       # 看 SLURM 输出
-   find ~/logs/rsl_rl/biped_demo -name "model_*.pt"  # 看 checkpoint
-   ```
-3. **TensorBoard** — 日志目录 `~/logs/rsl_rl/biped_demo/`，可下载到本地查看
-4. **警告刷屏** — `Failed to find rigid body` / `contact report API` 是 PhysX 在几何子网格上的良性警告，4096 环境下会刷几万行，无需理会
+| 配置 | 解决的问题 |
+|------|-----------|
+| `--env DISPLAY=:0` + `QT_QPA_PLATFORM=offscreen` | OmniHub `XOpenDisplay` segfault |
+| `--bind /dev/shm:/dev/shm` | 4096 环境共享内存不足 → SIGBUS |
+| `--mem=64G` | PhysX 缓冲 + PyTorch 模型内存 |
+| PYTHONPATH 注入 | 覆盖容器内置旧版 isaaclab |
+| `.kit` `asset_root.cloud` 改本地 | 计算节点无外网，S3 资产不可达 |
+| `terrain_type="usd"` + 本地 usda | 绕过云端 ground plane USD |
+| Torch 2.5.1 cu124 | HPC 驱动 CUDA 12.4，torch 2.11 需要 12.8 |
+
+---
+
+## 已知限制
+
+- **GPU 驱动 550 (CUDA 12.4)**：torch 永久锁在 2.5.1+cu124，无法升级
+- **Isaac Lab `rl_cfg.py` 修改未 commit**：加了 `std_range` 字段，重新 clone 后需补回去
+- **警告刷屏** — PhysX 的 `Failed to find rigid body` / `contact report API` 是良性警告，4096 环境会刷几万行，忽略即可

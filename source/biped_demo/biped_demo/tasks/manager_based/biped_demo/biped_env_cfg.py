@@ -216,13 +216,13 @@ class RewardsCfg:
     # ── 3. Posture — keep upright (tightened) ──────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
 
-    # ── 4. Smoothness — don't jitter ───────────────────────────────────
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.02)
+    # ── 4. Smoothness — tighten after 10k iterations ───────────────────
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.03)
 
-    # ── 5. Feet — gentle nudge toward alternating steps ────────────────
+    # ── 5. Feet — break the shuffling habit ────────────────────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=0.5,                    # 0.2→0.5 — enough to prefer lifting over shuffling
+        weight=1.0,                    # 0.5→1.0 — policy has walking skills now, won't abuse it
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
@@ -288,8 +288,8 @@ class EventCfg:
         mode="startup",
         params={
             "asset_cfg": SceneEntityCfg("robot", body_names=".*"),
-            "static_friction_range": (0.3, 1.0),
-            "dynamic_friction_range": (0.3, 1.0),
+            "static_friction_range": (0.1, 2.0),   # wider — high friction forces foot lift
+            "dynamic_friction_range": (0.1, 2.0),
             "restitution_range": (0.0, 0.0),
             "num_buckets": 64,
         },

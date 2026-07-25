@@ -1,11 +1,13 @@
 """PPO configuration for the bipedal robot velocity tracking task.
 
-Flat-terrain locomotion for a small 12-DOF biped (45 cm, 3.4 kg).
-Smaller network than H1 rough-terrain config — flat terrain + few DOFs
-don't need the capacity, and a smaller net converges more gradually.
+Flat-terrain locomotion for a 12-DOF biped (45 cm, 3.4 kg).
+Restored to larger network after [256,128,64] proved too small —
+error_vel_xy stuck at 0.45 regardless of reward tuning, suggesting
+the actor lacked capacity to represent coordinated 12-joint walking.
 
-Reference: IsaacLab official H1FlatPPORunnerCfg uses [128, 128, 128]
-for 4096-env flat-terrain training.
+Reference: livelybot Pi (12-DOF, same scale) uses [512,256,128]/[768,256,128]
+and trains for 10k+ iterations. H1 official flat uses [128,128,128] for a
+much easier 19-DOF task (arms can counterbalance, no risk of falling).
 """
 
 from isaaclab.utils.configclass import configclass
@@ -22,27 +24,25 @@ class PPORunnerCfg(RslRlOnPolicyRunnerCfg):
     """PPO runner configuration for bipedal locomotion."""
 
     num_steps_per_env = 24
-    max_iterations = 5000           # flat terrain converges faster — enough headroom
+    max_iterations = 10000          # 12-DOF walking needs more training
     save_interval = 100
     experiment_name = "biped_demo"
     empirical_normalization = False
 
-    # Actor network: [256, 128, 64] — smaller than H1 rough (512/256/128)
-    # because flat terrain + 12 DOF is an easier exploration problem.
-    # H1 official flat: [128, 128, 128] for reference.
+    # Actor: [512, 256, 128] — matches H1 rough + livelybot Pi (both 12+ DOF)
     actor = RslRlMLPModelCfg(
-        hidden_dims=[256, 128, 64],
+        hidden_dims=[512, 256, 128],
         activation="elu",
         obs_normalization=False,
         distribution_cfg=RslRlMLPModelCfg.GaussianDistributionCfg(
-            init_std=0.8,               # lower initial noise → less random at start
+            init_std=0.8,
             std_range=(0.05, 10.0),
         ),
     )
 
-    # Critic network: matches actor capacity
+    # Critic: [512, 256, 128] — matches H1 official
     critic = RslRlMLPModelCfg(
-        hidden_dims=[256, 128, 64],
+        hidden_dims=[512, 256, 128],
         activation="elu",
         obs_normalization=False,
     )
@@ -52,7 +52,7 @@ class PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         value_loss_coef=1.0,
         use_clipped_value_loss=True,
         clip_param=0.2,
-        entropy_coef=0.005,             # lower — simple task, don't need wild exploration
+        entropy_coef=0.005,
         num_learning_epochs=5,
         num_mini_batches=4,
         learning_rate=1.0e-3,

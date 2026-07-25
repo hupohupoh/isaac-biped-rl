@@ -35,7 +35,7 @@ class PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         activation="elu",
         obs_normalization=False,
         distribution_cfg=RslRlMLPModelCfg.GaussianDistributionCfg(
-            init_std=1.0,
+            init_std=0.8,               # lower initial noise → less random at start
             std_range=(0.05, 10.0),
         ),
     )
@@ -52,7 +52,7 @@ class PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         value_loss_coef=1.0,
         use_clipped_value_loss=True,
         clip_param=0.2,
-        entropy_coef=0.01,
+        entropy_coef=0.005,             # lower — simple task, don't need wild exploration
         num_learning_epochs=5,
         num_mini_batches=4,
         learning_rate=1.0e-3,

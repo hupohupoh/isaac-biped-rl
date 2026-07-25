@@ -162,7 +162,7 @@ class ObservationsCfg:
 
 @configclass
 class CommandsCfg:
-    """Velocity commands.  Biped: forward-only + heading, no lateral."""
+    """Velocity commands — forward-only, no yaw (phase 1: just learn to walk)."""
 
     base_velocity = mdp.UniformVelocityCommandCfg(
         asset_name="robot",
@@ -173,102 +173,47 @@ class CommandsCfg:
         heading_control_stiffness=0.5,
         debug_vis=False,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(-0.5, 1.0),    # backward 0.5 → forward 1.0 m/s
-            lin_vel_y=(-0.3, 0.3),    # small lateral
-            ang_vel_z=(-1.0, 1.0),    # yaw rate
-            heading=(-3.14, 3.14),
+            lin_vel_x=(0.0, 1.0),     # forward only — no backward
+            lin_vel_y=(0.0, 0.0),     # no lateral
+            ang_vel_z=(0.0, 0.0),     # no yaw — force learning translation
+            heading=(0.0, 0.0),       # go straight
         ),
     )
 
 
 # ── Rewards ───────────────────────────────────────────────────────────────────
-# Balanced between exploration drive and stability constraints.
-# After two rounds of tuning (v1 too aggressive, v2 too punitive), v3 finds
-# the middle ground — penalties scaled down for the small 3.4 kg biped.
+# Phase 1: survival + forward walking.  Only the essentials.
 #
-#   Positive sum ≈ 1.5 + 0.8 + 0.1 + 0.5 = 2.9
-#   Penalty sum ≈ -100(term) -1.0 -0.5 -0.02 -2.0 -0.5 -0.1 -0.005 -0.5 ≈ -106
+# feet_air_time, track_ang_vel_z, joint constraints — ALL removed.
+# They were causing reward hacking (spinning, jumping, joint-limit exploitation).
+# Add them back ONE AT A TIME after forward walking converges.
 #
-# When walking well: net ≈ +1.5~2.0 / step (strong enough to learn)
-# When flailing:    net ≈ -1.0~-2.0 / step (clear penalty gradient)
+#   Walking well:   track ≈ 2.0, alive = 0.1, net ≈ +2.1 / step
+#   Falling:        termination = -200 → strong penalty for dying
+#   Jittering:      action_rate = -0.01 → mild smoothing
+#   Tilting:        orientation = up to -1.0 → mild posture nudge
 
 
 @configclass
 class RewardsCfg:
-    """Bipedal locomotion rewards — v3: calibrated for 45 cm / 3.4 kg biped."""
+    """Phase 1 rewards — walk forward, stay upright, don't jitter."""
 
-    # ── 1. Velocity tracking ───────────────────────────────────────────
+    # ── 1. Forward velocity tracking (THE objective) ───────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=1.5,
-        params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
-    )
-    track_ang_vel_z_exp = RewTerm(
-        func=mdp.track_ang_vel_z_exp,
-        weight=0.8,
+        weight=2.0,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-100.0)
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
 
-    # ── 3. Posture ─────────────────────────────────────────────────────
+    # ── 3. Posture — keep upright ──────────────────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.0)
-    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-0.5)
-    ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.02)
-    base_height_l2 = RewTerm(
-        func=mdp.base_height_l2,
-        weight=-2.0,
-        params={"target_height": 0.35},
-    )
 
-    # ── 4. Joint regularization ────────────────────────────────────────
-    dof_pos_limits = RewTerm(
-        func=mdp.joint_pos_limits,
-        weight=-0.5,
-        params={"asset_cfg": SceneEntityCfg("robot")},
-    )
-    joint_deviation_hips = RewTerm(
-        func=mdp.joint_deviation_l1,
-        weight=-0.1,
-        params={
-            "asset_cfg": SceneEntityCfg(
-                "robot",
-                joint_names=[".*_leg_roll_joint", ".*_leg_yaw_joint"],
-            ),
-        },
-    )
-
-    # ── 5. Feet — gait ─────────────────────────────────────────────────
-    feet_air_time = RewTerm(
-        func=mdp.feet_air_time_positive_biped,
-        weight=0.5,
-        params={
-            "command_name": "base_velocity",
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[".*_ankle_roll_link"],
-            ),
-            "threshold": 0.3,
-        },
-    )
-
-    # ── 6. Smoothness ──────────────────────────────────────────────────
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
-
-    # ── 7. Safety — body parts shouldn't touch ground ──────────────────
-    undesired_contacts = RewTerm(
-        func=mdp.undesired_contacts,
-        weight=-0.5,
-        params={
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=["(?!.*ankle_roll_link).*"],
-            ),
-            "threshold": 1.0,
-        },
-    )
+    # ── 4. Smoothness — don't jitter ───────────────────────────────────
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
 
 
 # ── Terminations ──────────────────────────────────────────────────────────────

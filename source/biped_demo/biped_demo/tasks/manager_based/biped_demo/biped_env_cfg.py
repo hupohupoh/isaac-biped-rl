@@ -213,8 +213,13 @@ class RewardsCfg:
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-50.0)  # was -200 — caused value net instability
 
-    # ── 3. Posture — keep upright (tightened) ──────────────────────────
+    # ── 3. Posture — stand tall, don't crouch or lie down ──────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
+    base_height_l2 = RewTerm(
+        func=mdp.base_height_l2,
+        weight=-3.0,                   # crawling on ground → massive penalty
+        params={"target_height": 0.35},
+    )
 
     # ── 4. Smoothness — tighten after 10k iterations ───────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.03)
@@ -233,6 +238,19 @@ class RewardsCfg:
         },
     )
 
+    # ── 6. Safety — knees/hips on ground = crawling, not walking ─────
+    undesired_contacts = RewTerm(
+        func=mdp.undesired_contacts,
+        weight=-0.5,
+        params={
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=["(?!.*ankle_roll_link).*"],
+            ),
+            "threshold": 1.0,
+        },
+    )
+
 
 # ── Terminations ──────────────────────────────────────────────────────────────
 
@@ -244,7 +262,7 @@ class TerminationsCfg:
     time_out = DoneTerm(func=mdp.time_out, time_out=True)
     bad_orientation = DoneTerm(
         func=mdp.bad_orientation,
-        params={"limit_angle": 1.0},   # ~57° tilt → dead (wider for small robot)
+        params={"limit_angle": 0.7},   # ~40° tilt → dead (prevents crawling posture)
     )
     base_contact = DoneTerm(
         func=mdp.illegal_contact,

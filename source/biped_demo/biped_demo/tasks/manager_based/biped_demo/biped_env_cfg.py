@@ -216,14 +216,13 @@ class RewardsCfg:
     # ── 3. Posture — keep upright (tightened) ──────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
 
-    # ── 4. Smoothness — kill the micro-jitter ───────────────────────────
+    # ── 4. Smoothness — don't jitter ───────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.02)
-    dof_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=-2.5e-7)    # punish joint jitter at the source
 
     # ── 5. Feet — gentle nudge toward alternating steps ────────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=0.2,                    # very light — just a preference, not an objective
+        weight=0.5,                    # 0.2→0.5 — enough to prefer lifting over shuffling
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(

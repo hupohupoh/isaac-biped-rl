@@ -182,55 +182,56 @@ class CommandsCfg:
 
 
 # ── Rewards ───────────────────────────────────────────────────────────────────
-# Balanced reward design (adapted from both IsaacLab official H1 and unitree_rl_lab H1):
+# Balanced between exploration drive and stability constraints.
+# After two rounds of tuning (v1 too aggressive, v2 too punitive), v3 finds
+# the middle ground — penalties scaled down for the small 3.4 kg biped.
 #
-#   Positive sum ≈ 1.0 + 0.5 + 0.1 + 0.25 = 1.85
-#   Penalty sum ≈ -200(term) -1.0 -1.0 -0.05 -5.0 -1.0 -0.2 -0.1 -0.005 -1.0 ≈ -210
+#   Positive sum ≈ 1.5 + 0.8 + 0.1 + 0.5 = 2.9
+#   Penalty sum ≈ -100(term) -1.0 -0.5 -0.02 -2.0 -0.5 -0.1 -0.005 -0.5 ≈ -106
 #
-# The ratio of penalties to positives (~100:1) forces the policy to stay
-# within safe/stable operating bounds — it can't just maximize velocity
-# tracking while ignoring posture and joint health.
+# When walking well: net ≈ +1.5~2.0 / step (strong enough to learn)
+# When flailing:    net ≈ -1.0~-2.0 / step (clear penalty gradient)
 
 
 @configclass
 class RewardsCfg:
-    """Bipedal locomotion rewards — balanced for gradual, stable convergence."""
+    """Bipedal locomotion rewards — v3: calibrated for 45 cm / 3.4 kg biped."""
 
-    # ── 1. Velocity tracking (the ONLY strong positive rewards) ─────────
+    # ── 1. Velocity tracking ───────────────────────────────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=1.0,
+        weight=1.5,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_exp,
-        weight=0.5,
+        weight=0.8,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-100.0)
 
-    # ── 3. Posture (keep upright, don't bounce, don't wobble) ──────────
+    # ── 3. Posture ─────────────────────────────────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.0)
-    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-1.0)
-    ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.05)
+    lin_vel_z_l2 = RewTerm(func=mdp.lin_vel_z_l2, weight=-0.5)
+    ang_vel_xy_l2 = RewTerm(func=mdp.ang_vel_xy_l2, weight=-0.02)
     base_height_l2 = RewTerm(
         func=mdp.base_height_l2,
-        weight=-5.0,
-        params={"target_height": 0.35},   # robot's standing base height (~45cm tall)
+        weight=-2.0,
+        params={"target_height": 0.35},
     )
 
     # ── 4. Joint regularization ────────────────────────────────────────
     dof_pos_limits = RewTerm(
         func=mdp.joint_pos_limits,
-        weight=-1.0,
+        weight=-0.5,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
     joint_deviation_hips = RewTerm(
         func=mdp.joint_deviation_l1,
-        weight=-0.2,
+        weight=-0.1,
         params={
             "asset_cfg": SceneEntityCfg(
                 "robot",
@@ -239,26 +240,27 @@ class RewardsCfg:
         },
     )
 
-    # ── 5. Feet — gait + ground interaction ────────────────────────────
+    # ── 5. Feet — gait ─────────────────────────────────────────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=0.25,
+        weight=0.5,
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold": 0.3,     # lower than H1 (0.4) — small light robot
+            "threshold": 0.3,
         },
     )
+
     # ── 6. Smoothness ──────────────────────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
 
     # ── 7. Safety — body parts shouldn't touch ground ──────────────────
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
-        weight=-1.0,
+        weight=-0.5,
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",

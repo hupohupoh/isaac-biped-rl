@@ -197,10 +197,10 @@ class CommandsCfg:
 class RewardsCfg:
     """Phase 1.5 rewards — walk forward, upright, smooth, slight foot lift."""
 
-    # ── 1. Forward velocity tracking (THE objective) ───────────────────
+    # ── 1. Forward velocity tracking (THE objective — boosted) ─────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=2.0,
+        weight=3.0,                    # 2.0→3.0 — make tracking worth more than coasting
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
@@ -211,8 +211,9 @@ class RewardsCfg:
     # ── 3. Posture — keep upright (tightened) ──────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
 
-    # ── 4. Smoothness — don't jitter (tightened) ───────────────────────
+    # ── 4. Smoothness — kill the micro-jitter ───────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.02)
+    dof_acc_l2 = RewTerm(func=mdp.joint_acc_l2, weight=-2.5e-7)    # punish joint jitter at the source
 
     # ── 5. Feet — gentle nudge toward alternating steps ────────────────
     feet_air_time = RewTerm(

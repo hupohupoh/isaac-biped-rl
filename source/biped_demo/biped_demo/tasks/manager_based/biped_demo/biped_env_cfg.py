@@ -182,21 +182,20 @@ class CommandsCfg:
 
 
 # ── Rewards ───────────────────────────────────────────────────────────────────
-# Phase 1: survival + forward walking.  Only the essentials.
+# Phase 1.5: forward walking works, now polish posture + gait.
 #
-# feet_air_time, track_ang_vel_z, joint constraints — ALL removed.
-# They were causing reward hacking (spinning, jumping, joint-limit exploitation).
-# Add them back ONE AT A TIME after forward walking converges.
+# v2 HPC results: survival=100%, time_out=1.0, error_vel_yaw=0.17 (good),
+# but error_vel_xy=0.46 (stuck), action_rate=-0.375 (jittering),
+# entropy=25.98 (not converging), dof_pos_limits=-0.076 (joint abuse).
 #
-#   Walking well:   track ≈ 2.0, alive = 0.1, net ≈ +2.1 / step
-#   Falling:        termination = -200 → strong penalty for dying
-#   Jittering:      action_rate = -0.01 → mild smoothing
-#   Tilting:        orientation = up to -1.0 → mild posture nudge
+# Phase 1 (just 5 terms) fixed the "can't survive" problem.
+# Now add back ONE gentle term (feet_air_time) to nudge toward lifting feet,
+# and tighten posture/action penalties slightly.
 
 
 @configclass
 class RewardsCfg:
-    """Phase 1 rewards — walk forward, stay upright, don't jitter."""
+    """Phase 1.5 rewards — walk forward, upright, smooth, slight foot lift."""
 
     # ── 1. Forward velocity tracking (THE objective) ───────────────────
     track_lin_vel_xy_exp = RewTerm(
@@ -207,13 +206,27 @@ class RewardsCfg:
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-200.0)
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-50.0)  # was -200 — caused value net instability
 
-    # ── 3. Posture — keep upright ──────────────────────────────────────
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.0)
+    # ── 3. Posture — keep upright (tightened) ──────────────────────────
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
 
-    # ── 4. Smoothness — don't jitter ───────────────────────────────────
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
+    # ── 4. Smoothness — don't jitter (tightened) ───────────────────────
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.02)
+
+    # ── 5. Feet — gentle nudge toward alternating steps ────────────────
+    feet_air_time = RewTerm(
+        func=mdp.feet_air_time_positive_biped,
+        weight=0.2,                    # very light — just a preference, not an objective
+        params={
+            "command_name": "base_velocity",
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "threshold": 0.3,
+        },
+    )
 
 
 # ── Terminations ──────────────────────────────────────────────────────────────

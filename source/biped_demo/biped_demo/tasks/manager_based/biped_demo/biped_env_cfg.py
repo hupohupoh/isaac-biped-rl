@@ -203,6 +203,11 @@ class RewardsCfg:
         weight=3.0,                    # 2.0→3.0 — make tracking worth more than coasting
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
+    track_ang_vel_z_exp = RewTerm(
+        func=mdp.track_ang_vel_z_exp,
+        weight=0.3,                    # very light — just anti-spin, not a separate objective
+        params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
+    )
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)

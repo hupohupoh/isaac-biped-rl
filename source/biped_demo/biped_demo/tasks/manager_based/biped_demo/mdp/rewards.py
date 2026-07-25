@@ -49,3 +49,37 @@ def foot_grf(
     return net_forces.reshape(env.num_envs, num_feet * 3)
 
 
+def leg_roll_angle_penalty(
+    env: ManagerBasedRLEnv,
+    asset_cfg: SceneEntityCfg,
+    soft_limit: float = 0.087,    # 5°
+    hard_limit: float = 0.175,    # 10°
+    soft_weight: float = 2.0,
+    hard_weight: float = 10.0,
+) -> torch.Tensor:
+    """Escalating penalty for leg_roll joints exceeding tight angle limits.
+
+    |pos| < soft_limit (5°):  0 penalty
+    soft < |pos| < hard (10°): linear ramp × soft_weight
+    |pos| > hard_limit:       flat fine + exponential beyond × hard_weight
+
+    Designed to prevent the "splayed legs" crawling gait.
+    """
+    asset = env.scene[asset_cfg.name]
+    joint_pos = asset.data.joint_pos[:, asset_cfg.joint_ids]  # [num_envs, num_joints]
+    abs_pos = torch.abs(joint_pos)
+
+    penalty = torch.zeros_like(abs_pos)
+
+    # ramp zone: 5° ~ 10°
+    ramp = (abs_pos > soft_limit) & (abs_pos <= hard_limit)
+    penalty[ramp] = (abs_pos[ramp] - soft_limit) * soft_weight
+
+    # violation zone: > 10°
+    hard = abs_pos > hard_limit
+    ramp_portion = (hard_limit - soft_limit) * soft_weight   # penalty already accrued at hard_limit
+    penalty[hard] = ramp_portion + (abs_pos[hard] - hard_limit) * hard_weight
+
+    return torch.sum(penalty, dim=-1)
+
+

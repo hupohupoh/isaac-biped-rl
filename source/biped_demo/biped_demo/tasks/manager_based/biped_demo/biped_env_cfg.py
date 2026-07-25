@@ -224,7 +224,20 @@ class RewardsCfg:
     # ── 4. Smoothness — tighten after 10k iterations ───────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.03)
 
-    # ── 5. Feet — break the shuffling habit ────────────────────────────
+    # ── 5. Leg roll — tight angle limit, prevent splayed-leg crawling ──
+    leg_roll_angle = RewTerm(
+        func=mdp.leg_roll_angle_penalty,
+        weight=-1.0,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_roll_joint"]),
+            "soft_limit": 0.087,     # 5°
+            "hard_limit": 0.175,     # 10°
+            "soft_weight": 2.0,
+            "hard_weight": 10.0,
+        },
+    )
+
+    # ── 6. Feet — break the shuffling habit ────────────────────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=1.0,                    # 0.5→1.0 — policy has walking skills now, won't abuse it
@@ -238,7 +251,7 @@ class RewardsCfg:
         },
     )
 
-    # ── 6. Safety — knees/hips on ground = crawling, not walking ─────
+    # ── 7. Safety — knees/hips on ground = crawling, not walking ─────
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-0.5,

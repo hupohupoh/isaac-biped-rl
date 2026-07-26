@@ -222,14 +222,14 @@ class RewardsCfg:
     )
 
     # ── 4. Joint angle limits (soft→hard escalating penalty) ──────────
-    # Pitch joints: hip_pitch + knee_pitch + ankle_pitch. Soft=60°, Hard=90°.
+    # Pitch: leg_pitch + knee_pitch.  Soft=60°, Hard=90°.
     joint_angle_pitch = RewTerm(
         func=mdp.joint_angle_penalty,
         weight=-1.0,
         params={
             "asset_cfg": SceneEntityCfg(
                 "robot",
-                joint_names=[".*_leg_pitch_joint", ".*_knee_pitch_joint", ".*_ankle_pitch_joint"],
+                joint_names=[".*_leg_pitch_joint", ".*_knee_pitch_joint"],
             ),
             "soft_limit": 1.047,    # 60°
             "hard_limit": 1.571,    # 90°
@@ -237,7 +237,7 @@ class RewardsCfg:
             "hard_weight": 10.0,
         },
     )
-    # Yaw joints: hip_yaw. Soft=20°, Hard=45°.
+    # Yaw: leg_yaw.  Soft=20°, Hard=45°.
     joint_angle_yaw = RewTerm(
         func=mdp.joint_angle_penalty,
         weight=-1.0,
@@ -249,15 +249,12 @@ class RewardsCfg:
             "hard_weight": 10.0,
         },
     )
-    # Roll joints: hip_roll + ankle_roll. Soft=5°, Hard=10°.
+    # Roll: leg_roll.  Soft=5°, Hard=10°.
     joint_angle_roll = RewTerm(
         func=mdp.joint_angle_penalty,
         weight=-1.0,
         params={
-            "asset_cfg": SceneEntityCfg(
-                "robot",
-                joint_names=[".*_leg_roll_joint", ".*_ankle_roll_joint"],
-            ),
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_roll_joint"]),
             "soft_limit": 0.087,    # 5°
             "hard_limit": 0.175,    # 10°
             "soft_weight": 2.0,

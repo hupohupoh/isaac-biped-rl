@@ -139,3 +139,45 @@ def foot_swing_forward(
     return torch.sum(torch.relu(fwd_component) * in_air, dim=-1)
 
 
+def foot_tilt_penalty(
+    env: ManagerBasedRLEnv,
+    asset_cfg: SceneEntityCfg,
+    sensor_cfg: SceneEntityCfg,
+    threshold: float = 1.0,
+) -> torch.Tensor:
+    """Penalize feet that are not flat on the ground while in contact.
+
+    Transforms world gravity into each foot's body frame.  A flat foot has
+    gravity purely along -Z (XY ≈ 0).  Tilting the foot puts gravity into
+    XY, which is penalized.
+
+    Only active when the foot is in ground contact (force > threshold),
+    so swing-phase foot tilt is ignored.
+    """
+    from isaaclab.utils.math import quat_rotate_inverse
+
+    asset = env.scene[asset_cfg.name]
+    contact_sensor = env.scene.sensors[sensor_cfg.name]
+
+    # Foot body quaternion [num_envs, num_feet, 4]  (x, y, z, w)
+    foot_quat_w = asset.data.body_quat_w[:, sensor_cfg.body_ids, :]
+
+    # World gravity (0, 0, -1) transformed into each foot frame
+    n_envs = env.num_envs
+    n_feet = len(sensor_cfg.body_ids)
+    gravity_w = torch.tensor([0.0, 0.0, -1.0], device=env.device, dtype=foot_quat_w.dtype)
+    gravity_w = gravity_w.expand(n_envs, n_feet, 3)
+    gravity_foot = quat_rotate_inverse(foot_quat_w, gravity_w)  # [N, feet, 3]
+
+    # XY norm of gravity in foot frame = tilt angle proxy
+    tilt = torch.norm(gravity_foot[..., :2], dim=-1)  # [num_envs, num_feet]
+
+    # Only when foot is in contact
+    net_forces = contact_sensor.data.net_forces_w_history.torch
+    foot_forces = net_forces[:, :, sensor_cfg.body_ids, :]
+    force_mag = torch.norm(foot_forces, dim=-1).max(dim=1)[0]       # [num_envs, num_feet]
+    in_contact = (force_mag > threshold).float()
+
+    return torch.sum(tilt * in_contact, dim=-1)
+
+

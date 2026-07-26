@@ -275,10 +275,24 @@ class RewardsCfg:
             "threshold": 1.0,
         },
     )
-    # ── 6. Smoothness ──────────────────────────────────────────────────
+    # ── 6. Foot tilt — keep soles flat on ground ───────────────────────
+    foot_tilt = RewTerm(
+        func=mdp.foot_tilt_penalty,
+        weight=-0.2,
+        params={
+            "asset_cfg": SceneEntityCfg("robot"),
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "threshold": 1.0,
+        },
+    )
+
+    # ── 8. Smoothness ──────────────────────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
 
-    # ── 7. Safety — knees/hips on ground = crawling ────────────────────
+    # ── 9. Safety — knees/hips on ground = crawling ────────────────────
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-0.5,

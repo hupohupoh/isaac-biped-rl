@@ -181,10 +181,13 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         obs = env.get_observations()
         timestep = 0
 
-        # Camera tracking — follow robot each frame
+        # Fixed camera — robot walks through frame
         from isaacsim.core.rendering_manager import ViewportManager
-        camera_eye_offset = (3.5, 1.5, 0.6)    # further back, slight side
-        camera_look_offset = (0.0, 0.0, 0.35)
+        ViewportManager.set_camera_view(
+            "/OmniverseKit_Persp",
+            eye=[3.0, 1.5, 0.8],      # higher, slightly to the side
+            target=[5.0, 0.0, 0.35],  # looking ahead — robot walks toward this point
+        )
 
         try:
             while True:
@@ -196,18 +199,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                         policy.reset(dones)
                     else:
                         policy_nn.reset(dones)
-
-                # Update camera to follow robot position
-                root_pos = env.unwrapped.scene["robot"].data.root_pos_w[0]
-                ViewportManager.set_camera_view(
-                    "/OmniverseKit_Persp",
-                    eye=[root_pos[0].item() + camera_eye_offset[0],
-                         root_pos[1].item() + camera_eye_offset[1],
-                         root_pos[2].item() + camera_eye_offset[2]],
-                    target=[root_pos[0].item() + camera_look_offset[0],
-                            root_pos[1].item() + camera_look_offset[1],
-                            root_pos[2].item() + camera_look_offset[2]],
-                )
 
                 if args_cli.video:
                     timestep += 1

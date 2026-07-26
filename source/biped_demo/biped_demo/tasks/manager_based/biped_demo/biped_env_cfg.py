@@ -303,14 +303,14 @@ class RewardsCfg:
     # ── 6. Lift-off incentive — tiny nudge to pick feet up ────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=0.3,                    # strong enough to notice — foot_swing takes over after
+        weight=0.6,                    # boosted — air_time was always 0
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold": 0.3,
+            "threshold": 0.05,           # was 0.3 — too high for 30cm legs (swing ~0.15s)
         },
     )
 

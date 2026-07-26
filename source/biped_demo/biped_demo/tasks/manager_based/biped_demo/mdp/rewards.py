@@ -206,3 +206,64 @@ def hip_swing_reward(
     return torch.sum(torch.exp(-error / sigma), dim=-1)
 
 
+def feet_gait(
+    env: ManagerBasedRLEnv,
+    period: float,
+    offset: list[float],
+    sensor_cfg: SceneEntityCfg,
+    threshold: float = 0.5,
+    command_name: str | None = None,
+) -> torch.Tensor:
+    """Reward feet for matching a periodic gait contact pattern.
+
+    Each foot has a target stance phase defined by (global_phase + offset[i]) % 1.
+    When the phase < threshold, the foot should be in contact (stance).
+    When the phase >= threshold, the foot should be in the air (swing).
+
+    This directly rewards alternating stepping without being exploitable
+    by holding a single leg up — both feet must follow the pattern.
+    """
+    contact_sensor = env.scene.sensors[sensor_cfg.name]
+    is_contact = contact_sensor.data.current_contact_time[:, sensor_cfg.body_ids] > 0
+
+    global_phase = ((env.episode_length_buf * env.step_dt) % period / period).unsqueeze(1)
+    phases = []
+    for off in offset:
+        phases.append((global_phase + off) % 1.0)
+    leg_phase = torch.cat(phases, dim=-1)
+
+    reward = torch.zeros(env.num_envs, dtype=torch.float, device=env.device)
+    for i in range(len(sensor_cfg.body_ids)):
+        is_stance = leg_phase[:, i] < threshold
+        reward += ~(is_stance ^ is_contact[:, i])
+
+    if command_name is not None:
+        cmd_norm = torch.linalg.norm(env.command_manager.get_command(command_name)[:, :2], dim=1)
+        reward *= cmd_norm > 0.1
+    return reward
+
+
+def foot_clearance_reward(
+    env: ManagerBasedRLEnv,
+    asset_cfg: SceneEntityCfg,
+    target_height: float,
+    std: float,
+    tanh_mult: float,
+) -> torch.Tensor:
+    """Reward swinging feet for reaching a minimum height above ground.
+
+    Penalizes squared error from target height, gated by foot velocity
+    (faster-moving feet are weighted more heavily — they're swinging).
+    Uses Gaussian reward: exp(-sum(error^2 * tanh(vel)) / std).
+    """
+    asset = env.scene[asset_cfg.name]
+    foot_z_target_error = torch.square(
+        asset.data.body_pos_w[:, asset_cfg.body_ids, 2] - target_height
+    )
+    foot_velocity_tanh = torch.tanh(
+        tanh_mult * torch.norm(asset.data.body_lin_vel_w[:, asset_cfg.body_ids, :2], dim=2)
+    )
+    reward = foot_z_target_error * foot_velocity_tanh
+    return torch.exp(-torch.sum(reward, dim=1) / std)
+
+

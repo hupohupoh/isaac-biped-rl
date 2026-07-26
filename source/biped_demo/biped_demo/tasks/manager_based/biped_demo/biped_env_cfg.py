@@ -287,10 +287,10 @@ class RewardsCfg:
         },
     )
 
-    # ── 5. Hip rhythm — sinusoidal stepping template ────────────────────
+    # ── 5. Hip rhythm (light — feet_gait does the heavy lifting) ─────────
     hip_swing_left = RewTerm(
         func=mdp.hip_swing_reward,
-        weight=0.5,
+        weight=0.2,
         params={
             "asset_cfg": SceneEntityCfg("robot", joint_names=["l_leg_pitch_joint"]),
             "period": 0.5,
@@ -301,7 +301,7 @@ class RewardsCfg:
     )
     hip_swing_right = RewTerm(
         func=mdp.hip_swing_reward,
-        weight=0.5,
+        weight=0.2,
         params={
             "asset_cfg": SceneEntityCfg("robot", joint_names=["r_leg_pitch_joint"]),
             "period": 0.5,
@@ -311,7 +311,49 @@ class RewardsCfg:
         },
     )
 
-    # ── 6. Step rhythm — reward forward swing + lift-off nudge ──────────
+    # ── 6. Gait system — H1-style foot contact pattern + clearance ──────
+    feet_gait = RewTerm(
+        func=mdp.feet_gait,
+        weight=0.3,
+        params={
+            "period": 0.5,
+            "offset": [0.0, 0.5],
+            "threshold": 0.55,
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+        },
+    )
+    foot_clearance = RewTerm(
+        func=mdp.foot_clearance_reward,
+        weight=3.0,                    # H1=20 at 0.15m; scaled down for small robot
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "target_height": 0.04,     # H1=0.15m; 4cm for small robot
+            "std": 0.05,
+            "tanh_mult": 2.0,
+        },
+    )
+    feet_slide = RewTerm(
+        func=mdp.feet_slide,
+        weight=-0.1,                   # H1=-0.2; lighter for small robot
+        params={
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                body_names=[".*_ankle_roll_link"],
+            ),
+        },
+    )
+
+    # ── 7. Forward swing + lift-off ─────────────────────────────────────
     foot_swing_forward = RewTerm(
         func=mdp.foot_swing_forward,
         weight=0.8,
@@ -324,17 +366,16 @@ class RewardsCfg:
             "threshold": 1.0,
         },
     )
-    # ── 7. Lift-off incentive — tiny nudge to pick feet up ────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=1.0,                    # max — policy needs strong signal to discover lift-off
+        weight=1.0,
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold": 0.05,           # was 0.3 — too high for 30cm legs (swing ~0.15s)
+            "threshold": 0.05,
         },
     )
 
@@ -352,7 +393,7 @@ class RewardsCfg:
         },
     )
 
-    # ── 9. Smoothness ──────────────────────────────────────────────────
+    # ── 9. Smoothness ───────────────────────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
 
     # ── 10. Safety — knees/hips on ground = crawling ───────────────────

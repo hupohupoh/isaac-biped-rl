@@ -35,7 +35,7 @@ class PPORunnerCfg(RslRlOnPolicyRunnerCfg):
         activation="elu",
         obs_normalization=False,
         distribution_cfg=RslRlMLPModelCfg.GaussianDistributionCfg(
-            init_std=0.8,
+            init_std=0.5,               # lower — action_std was hitting 1.69
             std_range=(0.05, 10.0),
         ),
     )

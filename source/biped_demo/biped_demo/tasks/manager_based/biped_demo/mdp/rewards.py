@@ -91,52 +91,60 @@ def foot_swing_forward(
     asset_cfg: SceneEntityCfg,
     sensor_cfg: SceneEntityCfg,
     threshold: float = 1.0,
+    gait_period: float = 0.8,
 ) -> torch.Tensor:
-    """Reward feet that swing forward relative to the body while in the air.
+    """Reward alternating forward foot swing while the body moves forward.
 
-    For each foot not in ground contact, compute its forward velocity
-    (in the robot's body frame) relative to the body.  Only positive
-    relative velocity (foot swinging forward faster than body) is rewarded.
+    Two gates prevent exploitation:
 
-    Why this can't be exploited:
-    - Holding a foot up stationary:   rel_vel ≈ 0  → no reward
-    - Shuffling on ground:            foot in contact → excluded
-    - Alternating steps:              each swing phase → rewarded
+    1. **Gait phase clock**: sin(2π × t / period) gates which foot can score.
+       Foot 0 rewarded when sin > 0, foot 1 when sin < 0.  Forces natural
+       left-right alternation — holding one foot up forever only scores
+       during its half of the gait cycle.
 
-    Total reward sums over both feet, so alternating steps get roughly
-    twice the reward of a single-leg-dragging gait.
+    2. **Body speed gate**: sigmoid((body_fwd - 0.1) × 20).  Near zero when
+       the body is stationary, near one when walking > 0.15 m/s.  Prevents
+       the "stand in place and wiggle feet" exploit.
     """
+    import math
+
     asset = env.scene[asset_cfg.name]
     contact_sensor = env.scene.sensors[sensor_cfg.name]
 
-    # Foot world velocities  [num_envs, num_feet, 3]
     foot_vel_w = asset.data.body_lin_vel_w[:, sensor_cfg.body_ids, :]
-
-    # Robot body world velocity  [num_envs, 3]
     body_vel_w = asset.data.root_lin_vel_w
-
-    # Relative velocity (world frame)  [num_envs, num_feet, 3]
     rel_vel_w = foot_vel_w - body_vel_w.unsqueeze(1)
 
-    # Forward direction = body-frame X axis rotated into world
-    q = asset.data.root_quat_w  # [num_envs, 4]  (x, y, z, w)
+    # Forward direction (body X axis in world)
+    q = asset.data.root_quat_w  # [N, 4] (x, y, z, w)
     qx, qy, qz, qw = q[:, 0], q[:, 1], q[:, 2], q[:, 3]
     fx = 1.0 - 2.0 * (qy * qy + qz * qz)
     fy = 2.0 * (qx * qy + qw * qz)
     fz = 2.0 * (qx * qz - qw * qy)
-    forward_w = torch.stack([fx, fy, fz], dim=-1)  # [num_envs, 3]
+    forward_w = torch.stack([fx, fy, fz], dim=-1)  # [N, 3]
 
-    # Project relative velocity onto forward direction
-    fwd_component = (rel_vel_w * forward_w.unsqueeze(1)).sum(dim=-1)  # [num_envs, num_feet]
+    fwd_component = (rel_vel_w * forward_w.unsqueeze(1)).sum(dim=-1)  # [N, num_feet]
 
-    # Only reward when the foot is in the air
+    # In-air detection
     net_forces = contact_sensor.data.net_forces_w_history.torch
-    foot_forces = net_forces[:, :, sensor_cfg.body_ids, :]          # [N, hist, feet, 3]
-    force_mag = torch.norm(foot_forces, dim=-1).max(dim=1)[0]       # [num_envs, num_feet]
+    foot_forces = net_forces[:, :, sensor_cfg.body_ids, :]       # [N, hist, feet, 3]
+    force_mag = torch.norm(foot_forces, dim=-1).max(dim=1)[0]    # [N, num_feet]
     in_air = (force_mag <= threshold).float()
 
-    # Positive forward swing × in_air
-    return torch.sum(torch.relu(fwd_component) * in_air, dim=-1)
+    # --- Gait phase clock — alternating left/right window ---
+    episode_time = env.episode_length_buf * env.step_dt          # [N]
+    phase = 2.0 * math.pi * episode_time / gait_period
+    sin_phase = torch.sin(phase)                                  # [N]
+    foot_gate = torch.stack([
+        torch.relu(sin_phase),     # foot 0 scores when sin > 0
+        torch.relu(-sin_phase),    # foot 1 scores when sin < 0
+    ], dim=-1)                                                    # [N, num_feet]
+
+    # --- Body speed gate ---
+    body_fwd_speed = (body_vel_w * forward_w).sum(dim=-1).unsqueeze(1)  # [N, 1]
+    speed_gate = torch.sigmoid((body_fwd_speed - 0.1) * 20.0)
+
+    return torch.sum(torch.relu(fwd_component) * in_air * foot_gate * speed_gate, dim=-1)
 
 
 def foot_tilt_penalty(

@@ -215,7 +215,7 @@ class RewardsCfg:
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-5.0)   # cheap — encourage risk-taking
 
     # ── 3. Posture ─────────────────────────────────────────────────────
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-5.0)
     base_height_l2 = RewTerm(
         func=mdp.base_height_l2,
         weight=-3.0,
@@ -333,7 +333,7 @@ class RewardsCfg:
                 "robot",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "target_height": 0.06,     # 6cm — tight gradient between shuffle and lift
+            "target_height": 0.07,     # 7cm — lift a bit higher
             "std": 0.01,               # sharp — small errors matter
             "tanh_mult": 2.0,
         },

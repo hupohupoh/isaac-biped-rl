@@ -174,3 +174,35 @@ def foot_tilt_penalty(
     return torch.sum(tilt, dim=-1)
 
 
+def hip_swing_reward(
+    env: ManagerBasedRLEnv,
+    asset_cfg: SceneEntityCfg,
+    period: float = 0.5,
+    amplitude: float = 0.3,
+    sigma: float = 0.2,
+    phase_sign: float = 1.0,
+) -> torch.Tensor:
+    """Encourage a hip_pitch joint to follow a sinusoidal stepping rhythm.
+
+    Target = amplitude × phase_sign × sin(2πt / period)
+
+    Use two separate reward terms — one per leg with opposite phase_sign
+    (+1 for left, -1 for right) — to create alternating anti-phase motion.
+
+    Reward: exp(-|actual - target| / sigma).
+    Once the hips start swinging, feet lift naturally and foot_swing_forward
+    / air_time rewards take over.
+    """
+    import math
+
+    asset = env.scene[asset_cfg.name]
+    joint_pos = asset.data.joint_pos[:, asset_cfg.joint_ids]  # [N, num_joints]
+
+    episode_time = env.episode_length_buf.float() * env.step_dt  # [N]
+    phase = 2.0 * math.pi * episode_time / period
+    target = amplitude * phase_sign * torch.sin(phase)  # [N]
+
+    error = torch.abs(joint_pos - target.unsqueeze(-1))
+    return torch.sum(torch.exp(-error / sigma), dim=-1)
+
+

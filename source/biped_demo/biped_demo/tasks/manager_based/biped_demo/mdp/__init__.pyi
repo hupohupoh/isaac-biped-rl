@@ -10,4 +10,4 @@ from isaaclab.envs.mdp import *  # noqa: F401, F403
 from isaaclab_tasks.core.velocity.mdp import feet_air_time_positive_biped  # noqa: F401
 
 # Custom MDP terms for the bipedal robot
-from .rewards import foot_contact_state, foot_grf, joint_angle_penalty, foot_swing_forward, foot_tilt_penalty, gait_phase
+from .rewards import foot_contact_state, foot_grf, joint_angle_penalty, foot_swing_forward, foot_tilt_penalty, gait_phase, hip_swing_reward

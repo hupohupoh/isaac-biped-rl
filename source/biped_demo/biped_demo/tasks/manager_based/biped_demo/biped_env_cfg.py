@@ -287,7 +287,31 @@ class RewardsCfg:
         },
     )
 
-    # ── 5. Gait — reward forward swing + light air time ────────────────
+    # ── 5. Hip rhythm — sinusoidal stepping template ────────────────────
+    hip_swing_left = RewTerm(
+        func=mdp.hip_swing_reward,
+        weight=0.5,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=["l_leg_pitch_joint"]),
+            "period": 0.5,
+            "amplitude": 0.3,
+            "sigma": 0.2,
+            "phase_sign": 1.0,
+        },
+    )
+    hip_swing_right = RewTerm(
+        func=mdp.hip_swing_reward,
+        weight=0.5,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=["r_leg_pitch_joint"]),
+            "period": 0.5,
+            "amplitude": 0.3,
+            "sigma": 0.2,
+            "phase_sign": -1.0,
+        },
+    )
+
+    # ── 6. Step rhythm — reward forward swing + lift-off nudge ──────────
     foot_swing_forward = RewTerm(
         func=mdp.foot_swing_forward,
         weight=0.8,
@@ -300,7 +324,7 @@ class RewardsCfg:
             "threshold": 1.0,
         },
     )
-    # ── 6. Lift-off incentive — tiny nudge to pick feet up ────────────
+    # ── 7. Lift-off incentive — tiny nudge to pick feet up ────────────
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
         weight=1.0,                    # max — policy needs strong signal to discover lift-off
@@ -314,7 +338,7 @@ class RewardsCfg:
         },
     )
 
-    # ── 7. Foot tilt — always on, stance + swing ──────────────────────
+    # ── 8. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
         weight=-0.6,

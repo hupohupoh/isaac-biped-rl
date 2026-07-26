@@ -89,7 +89,7 @@ class ActionsCfg:
 
 @configclass
 class ObservationsCfg:
-    """Policy (48-dim) + Privileged (11-dim) observation groups."""
+    """Policy (50×15=750-dim) + Privileged (11-dim) observation groups."""
 
     @configclass
     class PolicyCfg(ObsGroup):
@@ -129,6 +129,7 @@ class ObservationsCfg:
         def __post_init__(self) -> None:
             self.enable_corruption = True
             self.concatenate_terms = True
+            self.history_length = 15       # Pi-style frame stacking — policy sees 0.3s of motion
 
     @configclass
     class PrivilegedCfg(ObsGroup):
@@ -201,7 +202,7 @@ class RewardsCfg:
     # ── 1. Velocity tracking ───────────────────────────────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=3.0,
+        weight=5.0,                    # boosted — must dominate gait rewards
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(

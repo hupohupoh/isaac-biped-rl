@@ -128,12 +128,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
-        # Camera — follow env 0 so robot stays in frame while walking
-        env_cfg.viewer.origin_type = "env"
-        env_cfg.viewer.env_index = 0
-        env_cfg.viewer.eye = (2.5, 1.2, 0.5)
-        env_cfg.viewer.lookat = (0.0, 0.0, 0.3)
-
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 
         if isinstance(env.unwrapped.cfg, DirectMARLEnvCfg):
@@ -187,6 +181,11 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         obs = env.get_observations()
         timestep = 0
 
+        # Camera tracking — follow robot each frame
+        from isaacsim.core.rendering_manager import ViewportManager
+        camera_eye_offset = (3.5, 1.5, 0.6)    # further back, slight side
+        camera_look_offset = (0.0, 0.0, 0.35)
+
         try:
             while True:
                 start_time = time.time()
@@ -197,6 +196,19 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                         policy.reset(dones)
                     else:
                         policy_nn.reset(dones)
+
+                # Update camera to follow robot position
+                root_pos = env.unwrapped.scene["robot"].data.root_pos_w[0]
+                ViewportManager.set_camera_view(
+                    "/OmniverseKit_Persp",
+                    eye=[root_pos[0].item() + camera_eye_offset[0],
+                         root_pos[1].item() + camera_eye_offset[1],
+                         root_pos[2].item() + camera_eye_offset[2]],
+                    target=[root_pos[0].item() + camera_look_offset[0],
+                            root_pos[1].item() + camera_look_offset[1],
+                            root_pos[2].item() + camera_look_offset[2]],
+                )
+
                 if args_cli.video:
                     timestep += 1
                     if timestep == args_cli.video_length:

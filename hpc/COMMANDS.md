@@ -33,7 +33,7 @@ singularity exec --nv \
     /isaac-sim/python.sh /workspace/biped_demo/scripts/rsl_rl/train.py \
     --task Biped-velocity-v0 \
     --num_envs 4096 \
-    --max_iterations 15000 \
+    --max_iterations 5000 \
     --headless
 EOF
 

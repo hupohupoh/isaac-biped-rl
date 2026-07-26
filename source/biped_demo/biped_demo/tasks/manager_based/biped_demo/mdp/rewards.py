@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import TYPE_CHECKING
 
 import torch
@@ -11,6 +12,18 @@ from isaaclab.managers import SceneEntityCfg
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedRLEnv
     from isaaclab.sensors import ContactSensor
+
+
+def gait_phase(env: ManagerBasedRLEnv, period: float = 1.0) -> torch.Tensor:
+    """Cyclic gait clock as (sin(2πφ), cos(2πφ)) where φ = (t % period) / period.
+
+    Adding this to policy observations lets the RL agent discover alternating
+    gait rhythm naturally, without needing a gait-phase gate inside reward terms.
+    """
+    episode_time_s = env.episode_length_buf.float() * env.step_dt
+    phase = (episode_time_s % period) / period
+    two_pi = 2.0 * math.pi
+    return torch.stack([torch.sin(two_pi * phase), torch.cos(two_pi * phase)], dim=-1)
 
 
 def foot_contact_state(
@@ -91,23 +104,14 @@ def foot_swing_forward(
     asset_cfg: SceneEntityCfg,
     sensor_cfg: SceneEntityCfg,
     threshold: float = 1.0,
-    gait_period: float = 0.8,
 ) -> torch.Tensor:
-    """Reward alternating forward foot swing while the body moves forward.
+    """Reward feet swinging forward relative to the body while in the air.
 
-    Two gates prevent exploitation:
-
-    1. **Gait phase clock**: sin(2π × t / period) gates which foot can score.
-       Foot 0 rewarded when sin > 0, foot 1 when sin < 0.  Forces natural
-       left-right alternation — holding one foot up forever only scores
-       during its half of the gait cycle.
-
-    2. **Body speed gate**: sigmoid((body_fwd - 0.1) × 20).  Near zero when
-       the body is stationary, near one when walking > 0.15 m/s.  Prevents
-       the "stand in place and wiggle feet" exploit.
+    Simplified — no gait-phase or body-speed gates.  The gait rhythm is
+    learned from the gait_phase observation.  Standing-still wiggling is
+    naturally suppressed by the track_lin_vel reward (the body must move
+    forward to score there).
     """
-    import math
-
     asset = env.scene[asset_cfg.name]
     contact_sensor = env.scene.sensors[sensor_cfg.name]
 
@@ -131,20 +135,7 @@ def foot_swing_forward(
     force_mag = torch.norm(foot_forces, dim=-1).max(dim=1)[0]    # [N, num_feet]
     in_air = (force_mag <= threshold).float()
 
-    # --- Gait phase clock — alternating left/right window ---
-    episode_time = env.episode_length_buf * env.step_dt          # [N]
-    phase = 2.0 * math.pi * episode_time / gait_period
-    sin_phase = torch.sin(phase)                                  # [N]
-    foot_gate = torch.stack([
-        torch.relu(sin_phase),     # foot 0 scores when sin > 0
-        torch.relu(-sin_phase),    # foot 1 scores when sin < 0
-    ], dim=-1)                                                    # [N, num_feet]
-
-    # --- Body speed gate ---
-    body_fwd_speed = (body_vel_w * forward_w).sum(dim=-1).unsqueeze(1)  # [N, 1]
-    speed_gate = torch.sigmoid((body_fwd_speed - 0.1) * 20.0)
-
-    return torch.sum(torch.relu(fwd_component) * in_air * foot_gate * speed_gate, dim=-1)
+    return torch.sum(torch.relu(fwd_component) * in_air, dim=-1)
 
 
 def foot_tilt_penalty(

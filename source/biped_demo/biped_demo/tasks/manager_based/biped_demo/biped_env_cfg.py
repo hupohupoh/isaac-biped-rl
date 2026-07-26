@@ -124,6 +124,7 @@ class ObservationsCfg:
             noise=Unoise(n_min=-1.5, n_max=1.5),
         )
         actions = ObsTerm(func=mdp.last_action)
+        gait_phase = ObsTerm(func=mdp.gait_phase, params={"period": 1.2})
 
         def __post_init__(self) -> None:
             self.enable_corruption = True
@@ -297,7 +298,6 @@ class RewardsCfg:
                 body_names=[".*_ankle_roll_link"],
             ),
             "threshold": 1.0,
-            "gait_period": 1.2,     # longer — discourage tiny shuffling steps
         },
     )
     # ── 6. Lift-off incentive — tiny nudge to pick feet up ────────────

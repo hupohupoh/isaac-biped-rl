@@ -261,6 +261,30 @@ class RewardsCfg:
             "hard_weight": 10.0,
         },
     )
+    # Ankle pitch: soft=15°, hard=30°.
+    joint_angle_ankle_pitch = RewTerm(
+        func=mdp.joint_angle_penalty,
+        weight=-1.0,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ankle_pitch_joint"]),
+            "soft_limit": 0.262,    # 15°
+            "hard_limit": 0.524,    # 30°
+            "soft_weight": 2.0,
+            "hard_weight": 10.0,
+        },
+    )
+    # Ankle roll: no penalty <10°, instant penalty >10°.
+    joint_angle_ankle_roll = RewTerm(
+        func=mdp.joint_angle_penalty,
+        weight=-1.0,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ankle_roll_joint"]),
+            "soft_limit": 0.175,    # 10° — same as hard → no ramp, instant
+            "hard_limit": 0.175,    # 10°
+            "soft_weight": 0.0,     # no ramp
+            "hard_weight": 10.0,
+        },
+    )
 
     # ── 5. Gait — reward forward swing + light air time ────────────────
     foot_swing_forward = RewTerm(
@@ -273,9 +297,10 @@ class RewardsCfg:
                 body_names=[".*_ankle_roll_link"],
             ),
             "threshold": 1.0,
+            "gait_period": 1.2,     # longer — discourage tiny shuffling steps
         },
     )
-    # ── 6. Foot tilt — keep soles flat on ground ───────────────────────
+    # ── 6. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
         weight=-0.2,
@@ -290,7 +315,7 @@ class RewardsCfg:
     )
 
     # ── 8. Smoothness ──────────────────────────────────────────────────
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
 
     # ── 9. Safety — knees/hips on ground = crawling ────────────────────
     undesired_contacts = RewTerm(

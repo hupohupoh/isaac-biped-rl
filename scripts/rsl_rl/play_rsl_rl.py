@@ -128,7 +128,9 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
-        # Camera — set BEFORE gym.make, video recorder copies from cfg.viewer
+        # Camera — follow env 0 so robot stays in frame while walking
+        env_cfg.viewer.origin_type = "env"
+        env_cfg.viewer.env_index = 0
         env_cfg.viewer.eye = (2.5, 1.2, 0.5)
         env_cfg.viewer.lookat = (0.0, 0.0, 0.3)
 

@@ -195,52 +195,92 @@ class CommandsCfg:
 
 @configclass
 class RewardsCfg:
-    """Phase 1.5 rewards — walk forward, upright, smooth, slight foot lift."""
+    """Phase 5 rewards — tight joint limits + alternating step pressure."""
 
-    # ── 1. Forward velocity tracking (THE objective — boosted) ─────────
+    # ── 1. Velocity tracking ───────────────────────────────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=3.0,                    # 2.0→3.0 — make tracking worth more than coasting
+        weight=3.0,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_exp,
-        weight=0.3,                    # very light — just anti-spin, not a separate objective
+        weight=0.3,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-50.0)  # was -200 — caused value net instability
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-50.0)
 
-    # ── 3. Posture — stand tall, don't crouch or lie down ──────────────
+    # ── 3. Posture ─────────────────────────────────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
     base_height_l2 = RewTerm(
         func=mdp.base_height_l2,
-        weight=-3.0,                   # crawling on ground → massive penalty
+        weight=-3.0,
         params={"target_height": 0.35},
     )
 
-    # ── 4. Smoothness — tighten after 10k iterations ───────────────────
-    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.03)
-
-    # ── 5. Leg roll — tight angle limit, prevent splayed-leg crawling ──
-    leg_roll_angle = RewTerm(
-        func=mdp.leg_roll_angle_penalty,
+    # ── 4. Joint angle limits (soft→hard escalating penalty) ──────────
+    # Pitch joints: hip_pitch + knee_pitch + ankle_pitch. Soft=60°, Hard=90°.
+    joint_angle_pitch = RewTerm(
+        func=mdp.joint_angle_penalty,
         weight=-1.0,
         params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_roll_joint"]),
-            "soft_limit": 0.087,     # 5°
-            "hard_limit": 0.175,     # 10°
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[".*_leg_pitch_joint", ".*_knee_pitch_joint", ".*_ankle_pitch_joint"],
+            ),
+            "soft_limit": 1.047,    # 60°
+            "hard_limit": 1.571,    # 90°
+            "soft_weight": 2.0,
+            "hard_weight": 10.0,
+        },
+    )
+    # Yaw joints: hip_yaw. Soft=20°, Hard=45°.
+    joint_angle_yaw = RewTerm(
+        func=mdp.joint_angle_penalty,
+        weight=-1.0,
+        params={
+            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_yaw_joint"]),
+            "soft_limit": 0.349,    # 20°
+            "hard_limit": 0.785,    # 45°
+            "soft_weight": 2.0,
+            "hard_weight": 10.0,
+        },
+    )
+    # Roll joints: hip_roll + ankle_roll. Soft=5°, Hard=10°.
+    joint_angle_roll = RewTerm(
+        func=mdp.joint_angle_penalty,
+        weight=-1.0,
+        params={
+            "asset_cfg": SceneEntityCfg(
+                "robot",
+                joint_names=[".*_leg_roll_joint", ".*_ankle_roll_joint"],
+            ),
+            "soft_limit": 0.087,    # 5°
+            "hard_limit": 0.175,    # 10°
             "soft_weight": 2.0,
             "hard_weight": 10.0,
         },
     )
 
-    # ── 6. Feet — break the shuffling habit ────────────────────────────
+    # ── 5. Gait — reward forward swing + light air time ────────────────
+    foot_swing_forward = RewTerm(
+        func=mdp.foot_swing_forward,
+        weight=0.5,
+        params={
+            "asset_cfg": SceneEntityCfg("robot"),
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "threshold": 1.0,
+        },
+    )
     feet_air_time = RewTerm(
         func=mdp.feet_air_time_positive_biped,
-        weight=1.0,                    # 0.5→1.0 — policy has walking skills now, won't abuse it
+        weight=0.2,                    # very light — tiebreaker only
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
@@ -251,7 +291,10 @@ class RewardsCfg:
         },
     )
 
-    # ── 7. Safety — knees/hips on ground = crawling, not walking ─────
+    # ── 6. Smoothness ──────────────────────────────────────────────────
+    action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
+
+    # ── 7. Safety — knees/hips on ground = crawling ────────────────────
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-0.5,

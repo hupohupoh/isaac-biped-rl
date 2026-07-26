@@ -129,8 +129,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         env_cfg.log_dir = log_dir
 
         # Camera — set BEFORE gym.make, video recorder copies from cfg.viewer
-        env_cfg.viewer.eye = (1.2, 0.4, 0.35)
-        env_cfg.viewer.lookat = (0.0, 0.0, 0.25)
+        env_cfg.viewer.eye = (2.5, 1.2, 0.5)
+        env_cfg.viewer.lookat = (0.0, 0.0, 0.3)
 
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 

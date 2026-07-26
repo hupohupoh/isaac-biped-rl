@@ -356,7 +356,7 @@ class RewardsCfg:
     # ── 7. Forward swing + lift-off ─────────────────────────────────────
     foot_swing_forward = RewTerm(
         func=mdp.foot_swing_forward,
-        weight=0.8,
+        weight=0.4,                    # reduced — clearance does the heavy lifting
         params={
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg(
@@ -366,19 +366,6 @@ class RewardsCfg:
             "threshold": 1.0,
         },
     )
-    feet_air_time = RewTerm(
-        func=mdp.feet_air_time_positive_biped,
-        weight=1.0,
-        params={
-            "command_name": "base_velocity",
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[".*_ankle_roll_link"],
-            ),
-            "threshold": 0.05,
-        },
-    )
-
     # ── 8. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,

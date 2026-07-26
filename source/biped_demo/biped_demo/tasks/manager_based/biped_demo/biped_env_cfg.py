@@ -333,8 +333,8 @@ class RewardsCfg:
                 "robot",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "target_height": 0.04,     # H1=0.15m; 4cm for small robot
-            "std": 0.05,
+            "target_height": 0.06,     # 6cm — tight gradient between shuffle and lift
+            "std": 0.01,               # sharp — small errors matter
             "tanh_mult": 2.0,
         },
     )
@@ -369,7 +369,7 @@ class RewardsCfg:
     # ── 8. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
-        weight=-0.6,
+        weight=-0.3,                   # reduced — clearance now carries flatness
         params={
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg(

@@ -250,20 +250,35 @@ def foot_clearance_reward(
     std: float,
     tanh_mult: float,
 ) -> torch.Tensor:
-    """Reward swinging feet for reaching a minimum height above ground.
+    """Reward swinging feet for reaching target height with flat soles.
 
-    Penalizes squared error from target height, gated by foot velocity
-    (faster-moving feet are weighted more heavily — they're swinging).
-    Uses Gaussian reward: exp(-sum(error^2 * tanh(vel)) / std).
+    Gaussian reward: exp(-sum(height_err^2 × tanh(vel)) / std),
+    scaled by foot flatness.  A tilted foot gets partial reward even
+    at the right height — the policy must lift flat to score fully.
     """
+    from isaaclab.utils.math import quat_apply_inverse
+
     asset = env.scene[asset_cfg.name]
+    n_feet = len(asset_cfg.body_ids)
+    n_envs = env.num_envs
+
+    # --- Height reward (original logic) ---
     foot_z_target_error = torch.square(
         asset.data.body_pos_w[:, asset_cfg.body_ids, 2] - target_height
     )
     foot_velocity_tanh = torch.tanh(
         tanh_mult * torch.norm(asset.data.body_lin_vel_w[:, asset_cfg.body_ids, :2], dim=2)
     )
-    reward = foot_z_target_error * foot_velocity_tanh
-    return torch.exp(-torch.sum(reward, dim=1) / std)
+    height_reward = torch.exp(-torch.sum(foot_z_target_error * foot_velocity_tanh, dim=1) / std)
+
+    # --- Flatness bonus ---
+    foot_quat_w = asset.data.body_quat_w[:, asset_cfg.body_ids, :]          # [N, feet, 4]
+    gravity_w = torch.tensor([0.0, 0.0, -1.0], device=env.device, dtype=foot_quat_w.dtype)
+    gravity_w = gravity_w.expand(n_envs, n_feet, 3)
+    gravity_foot = quat_apply_inverse(foot_quat_w, gravity_w)                # [N, feet, 3]
+    tilt = torch.norm(gravity_foot[..., :2], dim=-1)                         # [N, feet]
+    flatness = torch.exp(-torch.sum(tilt, dim=-1) / 0.1)                     # 1 when flat, <1 when tilted
+
+    return height_reward * flatness
 
 

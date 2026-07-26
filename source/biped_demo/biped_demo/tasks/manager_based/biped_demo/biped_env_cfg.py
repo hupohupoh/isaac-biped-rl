@@ -211,7 +211,7 @@ class RewardsCfg:
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-10.0)  # low — robot never dies, avoid value NaN
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-5.0)   # cheap — encourage risk-taking
 
     # ── 3. Posture ─────────────────────────────────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-2.5)
@@ -300,10 +300,24 @@ class RewardsCfg:
             "gait_period": 1.2,     # longer — discourage tiny shuffling steps
         },
     )
-    # ── 6. Foot tilt — always on, stance + swing ──────────────────────
+    # ── 6. Lift-off incentive — tiny nudge to pick feet up ────────────
+    feet_air_time = RewTerm(
+        func=mdp.feet_air_time_positive_biped,
+        weight=0.1,                    # just a gentle nudge — foot_swing does the real work
+        params={
+            "command_name": "base_velocity",
+            "sensor_cfg": SceneEntityCfg(
+                "contact_forces",
+                body_names=[".*_ankle_roll_link"],
+            ),
+            "threshold": 0.3,
+        },
+    )
+
+    # ── 7. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
-        weight=-0.5,
+        weight=-0.8,
         params={
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg(
@@ -314,10 +328,10 @@ class RewardsCfg:
         },
     )
 
-    # ── 8. Smoothness ──────────────────────────────────────────────────
+    # ── 9. Smoothness ──────────────────────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
 
-    # ── 9. Safety — knees/hips on ground = crawling ────────────────────
+    # ── 10. Safety — knees/hips on ground = crawling ───────────────────
     undesired_contacts = RewTerm(
         func=mdp.undesired_contacts,
         weight=-0.5,

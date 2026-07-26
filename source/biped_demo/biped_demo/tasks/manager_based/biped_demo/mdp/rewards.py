@@ -135,7 +135,11 @@ def foot_swing_forward(
     force_mag = torch.norm(foot_forces, dim=-1).max(dim=1)[0]    # [N, num_feet]
     in_air = (force_mag <= threshold).float()
 
-    return torch.sum(torch.relu(fwd_component) * in_air, dim=-1)
+    # Soft body-speed gate — kills stationary wiggling without hurting walking
+    body_fwd_speed = (body_vel_w * forward_w).sum(dim=-1).unsqueeze(1)
+    speed_gate = torch.sigmoid((body_fwd_speed - 0.05) * 30.0)
+
+    return torch.sum(torch.relu(fwd_component) * in_air * speed_gate, dim=-1)
 
 
 def foot_tilt_penalty(

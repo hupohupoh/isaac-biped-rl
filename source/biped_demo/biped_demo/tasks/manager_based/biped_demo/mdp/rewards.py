@@ -159,7 +159,7 @@ def foot_tilt_penalty(
     gravity purely along -Z (XY ≈ 0).  Tilting the foot puts gravity into
     XY, which is penalized regardless of ground contact.
     """
-    from isaaclab.utils.math import quat_rotate_inverse
+    from isaaclab.utils.math import quat_apply_inverse
 
     asset = env.scene[asset_cfg.name]
 
@@ -171,7 +171,7 @@ def foot_tilt_penalty(
     n_feet = len(sensor_cfg.body_ids)
     gravity_w = torch.tensor([0.0, 0.0, -1.0], device=env.device, dtype=foot_quat_w.dtype)
     gravity_w = gravity_w.expand(n_envs, n_feet, 3)
-    gravity_foot = quat_rotate_inverse(foot_quat_w, gravity_w)  # [N, feet, 3]
+    gravity_foot = quat_apply_inverse(foot_quat_w, gravity_w)  # [N, feet, 3]
 
     # XY norm of gravity in foot frame = tilt angle proxy
     tilt = torch.norm(gravity_foot[..., :2], dim=-1)  # [num_envs, num_feet]

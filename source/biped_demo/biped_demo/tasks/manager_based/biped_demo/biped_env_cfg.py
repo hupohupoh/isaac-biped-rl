@@ -124,7 +124,7 @@ class ObservationsCfg:
             noise=Unoise(n_min=-1.5, n_max=1.5),
         )
         actions = ObsTerm(func=mdp.last_action)
-        gait_phase = ObsTerm(func=mdp.gait_phase, params={"period": 1.2})
+        gait_phase = ObsTerm(func=mdp.gait_phase, params={"period": 0.5})
 
         def __post_init__(self) -> None:
             self.enable_corruption = True
@@ -317,7 +317,7 @@ class RewardsCfg:
     # ── 7. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
-        weight=-0.8,
+        weight=-0.6,
         params={
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg(

@@ -137,7 +137,7 @@ def foot_swing_forward(
 
     # Soft body-speed gate — kills stationary wiggling without hurting walking
     body_fwd_speed = (body_vel_w * forward_w).sum(dim=-1).unsqueeze(1)
-    speed_gate = torch.sigmoid((body_fwd_speed - 0.05) * 30.0)
+    speed_gate = torch.sigmoid((body_fwd_speed - 0.1) * 50.0)
 
     return torch.sum(torch.relu(fwd_component) * in_air * speed_gate, dim=-1)
 

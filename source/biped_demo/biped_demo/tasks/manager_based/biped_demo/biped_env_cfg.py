@@ -265,7 +265,7 @@ class RewardsCfg:
     # ── 5. Gait — reward forward swing + light air time ────────────────
     foot_swing_forward = RewTerm(
         func=mdp.foot_swing_forward,
-        weight=0.5,
+        weight=0.8,
         params={
             "asset_cfg": SceneEntityCfg("robot"),
             "sensor_cfg": SceneEntityCfg(

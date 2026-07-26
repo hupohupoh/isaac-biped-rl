@@ -128,6 +128,10 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
+        # Camera — set BEFORE gym.make, video recorder copies from cfg.viewer
+        env_cfg.viewer.eye = (1.2, 0.4, 0.35)
+        env_cfg.viewer.lookat = (0.0, 0.0, 0.25)
+
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 
         if isinstance(env.unwrapped.cfg, DirectMARLEnvCfg):
@@ -176,13 +180,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                 normalizer = None
             export_policy_as_jit(policy_nn, normalizer=normalizer, path=export_model_dir, filename="policy.pt")
             export_policy_as_onnx(policy_nn, normalizer=normalizer, path=export_model_dir, filename="policy.onnx")
-
-        # Camera — close front view, after env/viewer is fully initialized
-        from isaaclab.sim import SimulationContext
-        sim = SimulationContext.instance()
-        if sim is not None:
-            sim.set_camera_view(eye=(1.2, 0.4, 0.35), target=(0.0, 0.0, 0.25))
-            print("[INFO] Camera set to close front view.")
 
         dt = env.unwrapped.step_dt
         obs = env.get_observations()

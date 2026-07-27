@@ -282,3 +282,28 @@ def foot_clearance_reward(
     return height_reward * flatness
 
 
+def feet_air_time_gated(
+    env: ManagerBasedRLEnv,
+    command_name: str,
+    sensor_cfg: SceneEntityCfg,
+    threshold: float,
+    sigma: float = 0.5,
+) -> torch.Tensor:
+    """feet_air_time gated by velocity tracking quality.
+
+    Standard air_time reward multiplied by exp(-tracking_error / sigma).
+    When the robot tracks velocity commands poorly, air_time reward is
+    suppressed → must walk forward to earn foot-lift credit.
+    Prevents "marching in place" exploitation.
+    """
+    from isaaclab_tasks.core.velocity.mdp.rewards import feet_air_time
+
+    reward = feet_air_time(env, command_name, sensor_cfg, threshold)
+
+    cmd = env.command_manager.get_command(command_name)
+    asset = env.scene["robot"]
+    tracking_error = torch.norm(asset.data.root_lin_vel_w[:, :2] - cmd[:, :2], dim=-1)
+    gate = torch.exp(-tracking_error / sigma).clamp(min=0.3)  # floor — never kills signal entirely
+    return reward * gate
+
+

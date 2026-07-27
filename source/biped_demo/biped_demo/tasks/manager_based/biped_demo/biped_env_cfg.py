@@ -218,16 +218,15 @@ class RewardsCfg:
     # Regular feet_air_time rewards air time per foot, capped at 0.4s.
     # Lifting one foot for 10s = same reward as 0.4s → natural alternation.
     feet_air_time = RewTerm(
-        func=mdp.feet_air_time,
-        weight=1.5,                    # boosted — tracking:air ≈ 3:1 (Berkeley=2:1)
+        func=mdp.feet_air_time_gated,
+        weight=3.0,                    # high — small robot needs strong signal
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold_min": 0.1,
-            "threshold_max": 0.4,      # cap prevents holding-foot-up exploit
+            "threshold": 0.02,          # sensitive — 30cm legs swing only ~0.15s
         },
     )
     feet_slide = RewTerm(

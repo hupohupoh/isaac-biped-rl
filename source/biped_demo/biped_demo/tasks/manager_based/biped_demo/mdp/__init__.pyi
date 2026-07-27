@@ -7,7 +7,7 @@ __all__: list[str] = []
 
 # Forward all Isaac Lab built-in MDP terms lazily.
 from isaaclab.envs.mdp import *  # noqa: F401, F403
-from isaaclab_tasks.core.velocity.mdp import feet_air_time_positive_biped  # noqa: F401
+from isaaclab_tasks.core.velocity.mdp import feet_air_time_positive_biped, feet_air_time  # noqa: F401
 
 # Custom MDP terms for the bipedal robot
 from isaaclab_tasks.core.velocity.mdp import feet_slide

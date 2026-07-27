@@ -197,12 +197,12 @@ class CommandsCfg:
 
 @configclass
 class RewardsCfg:
-    """Phase 5 rewards — tight joint limits + alternating step pressure."""
+    """Berkeley-style minimal rewards — physics does the work."""
 
     # ── 1. Velocity tracking ───────────────────────────────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=5.0,                    # boosted — must dominate gait rewards
+        weight=5.0,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(
@@ -213,114 +213,26 @@ class RewardsCfg:
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-2.0)   # light — implicit penalty from early truncation is enough
 
-    # ── 3. Posture — relaxed for dynamic bipedal balance ────────────────
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.5)
-    base_height_l2 = RewTerm(
-        func=mdp.base_height_l2,
-        weight=-1.0,
-        params={"target_height": 0.35},
-    )
-
-    # ── 4. Joint angle limits (soft→hard escalating penalty) ──────────
-    # Pitch: leg_pitch + knee_pitch.  Soft=60°, Hard=90°.
-    joint_angle_pitch = RewTerm(
-        func=mdp.joint_angle_penalty,
-        weight=-1.0,
+    # ── 3. Feet — regular air_time + slide (Berkeley formula) ──────────
+    # Regular feet_air_time rewards air time per foot, capped at 0.4s.
+    # Lifting one foot for 10s = same reward as 0.4s → natural alternation.
+    feet_air_time = RewTerm(
+        func=mdp.feet_air_time,
+        weight=0.5,
         params={
-            "asset_cfg": SceneEntityCfg(
-                "robot",
-                joint_names=[".*_leg_pitch_joint", ".*_knee_pitch_joint"],
-            ),
-            "soft_limit": 1.047,    # 60°
-            "hard_limit": 1.571,    # 90°
-            "soft_weight": 2.0,
-            "hard_weight": 10.0,
-        },
-    )
-    # Yaw: leg_yaw.  Soft=20°, Hard=45°.
-    joint_angle_yaw = RewTerm(
-        func=mdp.joint_angle_penalty,
-        weight=-1.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_yaw_joint"]),
-            "soft_limit": 0.349,    # 20°
-            "hard_limit": 0.785,    # 45°
-            "soft_weight": 2.0,
-            "hard_weight": 10.0,
-        },
-    )
-    # Roll: leg_roll.  Soft=5°, Hard=10°.
-    joint_angle_roll = RewTerm(
-        func=mdp.joint_angle_penalty,
-        weight=-1.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_leg_roll_joint"]),
-            "soft_limit": 0.087,    # 5°
-            "hard_limit": 0.175,    # 10°
-            "soft_weight": 2.0,
-            "hard_weight": 10.0,
-        },
-    )
-    # Ankle pitch: soft=15°, hard=30°.
-    joint_angle_ankle_pitch = RewTerm(
-        func=mdp.joint_angle_penalty,
-        weight=-1.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ankle_pitch_joint"]),
-            "soft_limit": 0.262,    # 15°
-            "hard_limit": 0.524,    # 30°
-            "soft_weight": 2.0,
-            "hard_weight": 10.0,
-        },
-    )
-    # Ankle roll: soft ramp 8°→10°, hard beyond.
-    joint_angle_ankle_roll = RewTerm(
-        func=mdp.joint_angle_penalty,
-        weight=-1.0,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ankle_roll_joint"]),
-            "soft_limit": 0.140,    # 8°
-            "hard_limit": 0.175,    # 10°
-            "soft_weight": 1.0,
-            "hard_weight": 10.0,
-        },
-    )
-
-    # ── 5. Hip rhythm — disabled (redundant with feet_gait) ─────────────
-    # hip_swing_left / hip_swing_right commented out — uncomment if gait stalls
-
-    # ── 6. Gait system — H1-style foot contact pattern + clearance ──────
-    feet_gait = RewTerm(
-        func=mdp.feet_gait,
-        weight=0.3,
-        params={
-            "period": 0.5,
-            "offset": [0.0, 0.5],
-            "threshold": 0.55,
+            "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-        },
-    )
-    foot_clearance = RewTerm(
-        func=mdp.foot_clearance_reward,
-        weight=0.8,                    # relaxed — tracking is the priority
-        params={
-            "asset_cfg": SceneEntityCfg(
-                "robot",
-                body_names=[".*_ankle_roll_link"],
-            ),
-            "target_height": 0.06,     # 6cm
-            "std": 0.015,               # softer tolerance
-            "tanh_mult": 2.0,
+            "threshold_min": 0.1,      # ignore micro-lifts
+            "threshold_max": 0.4,      # cap — forces alternation
         },
     )
     feet_slide = RewTerm(
         func=mdp.feet_slide,
-        weight=-0.1,                   # H1=-0.2; lighter for small robot
+        weight=-0.2,                   # Berkeley uses -0.25
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
@@ -333,38 +245,11 @@ class RewardsCfg:
         },
     )
 
-    # ── 7. Foot swing — disabled (conflicting with clearance+gait) ──────
-    # foot_swing_forward commented out — uncomment if feet don't swing forward
+    # ── 4. Posture ─────────────────────────────────────────────────────
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.5)
 
-    # ── 8. Foot tilt — always on, stance + swing ──────────────────────
-    foot_tilt = RewTerm(
-        func=mdp.foot_tilt_penalty,
-        weight=-0.3,                   # reduced — clearance now carries flatness
-        params={
-            "asset_cfg": SceneEntityCfg("robot"),
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[".*_ankle_roll_link"],
-            ),
-            "threshold": 1.0,
-        },
-    )
-
-    # ── 9. Smoothness ───────────────────────────────────────────────────
+    # ── 5. Smoothness ──────────────────────────────────────────────────
     action_rate_l2 = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
-
-    # ── 10. Safety — knees/hips on ground = crawling ───────────────────
-    undesired_contacts = RewTerm(
-        func=mdp.undesired_contacts,
-        weight=-0.5,
-        params={
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=["(?!.*ankle_roll_link).*"],
-            ),
-            "threshold": 1.0,
-        },
-    )
 
 
 # ── Terminations ──────────────────────────────────────────────────────────────

@@ -128,11 +128,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
-        # Camera: track robot via Isaac Lab's built-in viewport controller
-        env_cfg.viewer.origin_type = "asset_root"
-        env_cfg.viewer.asset_name = "robot"
-        env_cfg.viewer.eye = (2.0, 1.5, 0.4)
-        env_cfg.viewer.lookat = (0.0, 0.0, 0.35)
+        env_cfg.viewer.eye = (2.0, 2.0, 1.0)
+        env_cfg.viewer.lookat = (2.0, 0.0, 0.35)
 
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 
@@ -187,9 +184,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         obs = env.get_observations()
         timestep = 0
 
-        # Camera: track robot position each frame via Isaac Lab's official controller
-        vcc = env.unwrapped.viewport_camera_controller
-
         try:
             while True:
                 start_time = time.time()
@@ -200,8 +194,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                         policy.reset(dones)
                     else:
                         policy_nn.reset(dones)
-
-                vcc.update_view_to_asset_root("robot")
 
                 if args_cli.video:
                     timestep += 1

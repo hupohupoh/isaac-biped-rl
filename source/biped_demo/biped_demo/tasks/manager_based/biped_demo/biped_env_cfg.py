@@ -219,15 +219,15 @@ class RewardsCfg:
     # Lifting one foot for 10s = same reward as 0.4s → natural alternation.
     feet_air_time = RewTerm(
         func=mdp.feet_air_time,
-        weight=0.5,
+        weight=1.5,                    # boosted — tracking:air ≈ 3:1 (Berkeley=2:1)
         params={
             "command_name": "base_velocity",
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "threshold_min": 0.1,      # ignore micro-lifts
-            "threshold_max": 0.4,      # cap — forces alternation
+            "threshold_min": 0.1,
+            "threshold_max": 0.4,      # cap prevents holding-foot-up exploit
         },
     )
     feet_slide = RewTerm(

@@ -128,6 +128,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
+        # Camera: track robot via Isaac Lab's built-in viewport controller
+        env_cfg.viewer.origin_type = "asset_root"
+        env_cfg.viewer.asset_name = "robot"
+        env_cfg.viewer.eye = (2.0, 1.5, 0.4)
+        env_cfg.viewer.lookat = (0.0, 0.0, 0.35)
+
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
 
         if isinstance(env.unwrapped.cfg, DirectMARLEnvCfg):
@@ -181,13 +187,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         obs = env.get_observations()
         timestep = 0
 
-        # Fixed camera — robot walks through frame
-        from isaacsim.core.rendering_manager import ViewportManager
-        ViewportManager.set_camera_view(
-            "/OmniverseKit_Persp",
-            eye=[3.0, 1.5, 0.8],      # higher, slightly to the side
-            target=[5.0, 0.0, 0.35],  # looking ahead — robot walks toward this point
-        )
+        # Camera: track robot position each frame via Isaac Lab's official controller
+        vcc = env.unwrapped.viewport_camera_controller
 
         try:
             while True:
@@ -199,6 +200,8 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                         policy.reset(dones)
                     else:
                         policy_nn.reset(dones)
+
+                vcc.update_view_to_asset_root("robot")
 
                 if args_cli.video:
                     timestep += 1

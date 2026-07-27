@@ -213,7 +213,7 @@ class RewardsCfg:
 
     # ── 2. Survival ────────────────────────────────────────────────────
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
-    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-5.0)   # cheap — encourage risk-taking
+    termination_penalty = RewTerm(func=mdp.is_terminated, weight=-2.0)   # light — implicit penalty from early truncation is enough
 
     # ── 3. Posture ─────────────────────────────────────────────────────
     flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-5.0)

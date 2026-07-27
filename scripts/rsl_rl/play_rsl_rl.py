@@ -128,7 +128,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         log_dir = os.path.dirname(resume_path)
         env_cfg.log_dir = log_dir
 
-        env_cfg.viewer.eye = (2.0, 2.0, 1.0)
+        env_cfg.viewer.eye = (-1.0, 1.5, 0.6)
         env_cfg.viewer.lookat = (2.0, 0.0, 0.35)
 
         env = gym.make(args_cli.task, cfg=env_cfg, render_mode="rgb_array" if args_cli.video else None)
@@ -183,6 +183,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         dt = env.unwrapped.step_dt
         obs = env.get_observations()
         timestep = 0
+        _print_step = 0  # for position print
 
         try:
             while True:
@@ -194,6 +195,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
                         policy.reset(dones)
                     else:
                         policy_nn.reset(dones)
+
+                _print_step += 1
+                if _print_step % 50 == 0:
+                    p = env.unwrapped.scene["robot"].data.root_pos_w[0]
+                    v = env.unwrapped.scene["robot"].data.root_lin_vel_w[0]
+                    print(f"  step {_print_step}: pos=({p[0]:.3f},{p[1]:.3f},{p[2]:.3f}) vel=({v[0]:.3f},{v[1]:.3f},{v[2]:.3f})")
 
                 if args_cli.video:
                     timestep += 1

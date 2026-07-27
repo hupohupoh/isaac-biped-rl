@@ -207,7 +207,7 @@ class RewardsCfg:
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_exp,
-        weight=0.3,
+        weight=0.8,                    # boosted — anti-spin, don't turn for reward
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 

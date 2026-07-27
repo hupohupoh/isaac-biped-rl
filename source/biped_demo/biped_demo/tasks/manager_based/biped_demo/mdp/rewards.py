@@ -203,7 +203,12 @@ def hip_swing_reward(
     target = amplitude * phase_sign * torch.sin(phase)  # [N]
 
     error = torch.abs(joint_pos - target.unsqueeze(-1))
-    return torch.sum(torch.exp(-error / sigma), dim=-1)
+    reward = torch.sum(torch.exp(-error / sigma), dim=-1)
+
+    # Command gate: no rhythmic swinging when standing still
+    cmd_norm = torch.norm(env.command_manager.get_command("base_velocity")[:, :2], dim=1)
+    reward *= cmd_norm > 0.1
+    return reward
 
 
 def feet_gait(

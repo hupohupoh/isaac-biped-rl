@@ -384,7 +384,7 @@ class TerminationsCfg:
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
-                body_names=["base_link", ".*_knee_.*", ".*_thigh_.*"],
+                body_names=["base_link", ".*_knee_.*", ".*_leg_pitch_.*", ".*_leg_roll_.*", ".*_leg_yaw_.*", ".*_ankle_pitch_.*"],
             ),
             "threshold": 1.0,
         },

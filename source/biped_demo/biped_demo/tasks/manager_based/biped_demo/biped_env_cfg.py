@@ -327,7 +327,7 @@ class RewardsCfg:
     )
     foot_clearance = RewTerm(
         func=mdp.foot_clearance_reward,
-        weight=3.0,                    # H1=20 at 0.15m; scaled down for small robot
+        weight=2.0,                    # step 1: when stable, drop to 1.0, then 0.5
         params={
             "asset_cfg": SceneEntityCfg(
                 "robot",

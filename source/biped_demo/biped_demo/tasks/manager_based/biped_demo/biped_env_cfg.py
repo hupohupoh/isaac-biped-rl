@@ -483,7 +483,7 @@ class CurriculumCfg:
         params={
             "term_name": "foot_clearance",
             "weight": 1.0,                      # reduce from 2.0
-            "num_steps": 500 * 4096 * 24,       # after ~500 iterations
+            "num_steps": 1000 * 4096 * 24,      # after ~1000 iterations
         },
     )
     clearance_step2 = CurrTerm(
@@ -491,7 +491,7 @@ class CurriculumCfg:
         params={
             "term_name": "foot_clearance",
             "weight": 0.5,                      # reduce from 1.0
-            "num_steps": 1500 * 4096 * 24,      # after ~1500 iterations
+            "num_steps": 2000 * 4096 * 24,      # after ~2000 iterations
         },
     )
 

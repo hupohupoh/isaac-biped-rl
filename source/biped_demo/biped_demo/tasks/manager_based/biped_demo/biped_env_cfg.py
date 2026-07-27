@@ -12,6 +12,7 @@ import os
 import isaaclab.sim as sim_utils
 from isaaclab.assets import ArticulationCfg, AssetBaseCfg
 from isaaclab.envs import ManagerBasedRLEnvCfg
+from isaaclab.managers import CurriculumTermCfg as CurrTerm
 from isaaclab.managers import EventTermCfg as EventTerm
 from isaaclab.managers import ObservationGroupCfg as ObsGroup
 from isaaclab.managers import ObservationTermCfg as ObsTerm
@@ -470,6 +471,31 @@ class EventCfg:
     )
 
 
+# ── Curriculum ─────────────────────────────────────────────────────────────────
+
+
+@configclass
+class CurriculumCfg:
+    """Gradually reduce clearance weight as walking improves."""
+
+    clearance_step1 = CurrTerm(
+        func=mdp.modify_reward_weight,
+        params={
+            "term_name": "foot_clearance",
+            "weight": 1.0,                      # reduce from 2.0
+            "num_steps": 500 * 4096 * 24,       # after ~500 iterations
+        },
+    )
+    clearance_step2 = CurrTerm(
+        func=mdp.modify_reward_weight,
+        params={
+            "term_name": "foot_clearance",
+            "weight": 0.5,                      # reduce from 1.0
+            "num_steps": 1500 * 4096 * 24,      # after ~1500 iterations
+        },
+    )
+
+
 # ── Full env ──────────────────────────────────────────────────────────────────
 
 
@@ -482,6 +508,7 @@ class BipedEnvCfg(ManagerBasedRLEnvCfg):
     actions: ActionsCfg = ActionsCfg()
     commands: CommandsCfg = CommandsCfg()
     rewards: RewardsCfg = RewardsCfg()
+    curriculum: CurriculumCfg = CurriculumCfg()
     terminations: TerminationsCfg = TerminationsCfg()
     events: EventCfg = EventCfg()
 

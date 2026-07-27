@@ -129,7 +129,7 @@ class ObservationsCfg:
         def __post_init__(self) -> None:
             self.enable_corruption = True
             self.concatenate_terms = True
-            self.history_length = 15       # Pi-style frame stacking — policy sees 0.3s of motion
+            # self.history_length = 15       # disabled — hurt more than helped
 
     @configclass
     class PrivilegedCfg(ObsGroup):
@@ -215,11 +215,11 @@ class RewardsCfg:
     alive = RewTerm(func=mdp.is_alive, weight=0.1)
     termination_penalty = RewTerm(func=mdp.is_terminated, weight=-2.0)   # light — implicit penalty from early truncation is enough
 
-    # ── 3. Posture ─────────────────────────────────────────────────────
-    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-5.0)
+    # ── 3. Posture — relaxed for dynamic bipedal balance ────────────────
+    flat_orientation_l2 = RewTerm(func=mdp.flat_orientation_l2, weight=-1.5)
     base_height_l2 = RewTerm(
         func=mdp.base_height_l2,
-        weight=-3.0,
+        weight=-1.0,
         params={"target_height": 0.35},
     )
 
@@ -275,42 +275,21 @@ class RewardsCfg:
             "hard_weight": 10.0,
         },
     )
-    # Ankle roll: no penalty <10°, instant penalty >10°.
+    # Ankle roll: soft ramp 8°→10°, hard beyond.
     joint_angle_ankle_roll = RewTerm(
         func=mdp.joint_angle_penalty,
         weight=-1.0,
         params={
             "asset_cfg": SceneEntityCfg("robot", joint_names=[".*_ankle_roll_joint"]),
-            "soft_limit": 0.175,    # 10° — same as hard → no ramp, instant
+            "soft_limit": 0.140,    # 8°
             "hard_limit": 0.175,    # 10°
-            "soft_weight": 0.0,     # no ramp
+            "soft_weight": 1.0,
             "hard_weight": 10.0,
         },
     )
 
-    # ── 5. Hip rhythm (light — feet_gait does the heavy lifting) ─────────
-    hip_swing_left = RewTerm(
-        func=mdp.hip_swing_reward,
-        weight=0.2,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=["l_leg_pitch_joint"]),
-            "period": 0.5,
-            "amplitude": 0.3,
-            "sigma": 0.2,
-            "phase_sign": 1.0,
-        },
-    )
-    hip_swing_right = RewTerm(
-        func=mdp.hip_swing_reward,
-        weight=0.2,
-        params={
-            "asset_cfg": SceneEntityCfg("robot", joint_names=["r_leg_pitch_joint"]),
-            "period": 0.5,
-            "amplitude": 0.3,
-            "sigma": 0.2,
-            "phase_sign": -1.0,
-        },
-    )
+    # ── 5. Hip rhythm — disabled (redundant with feet_gait) ─────────────
+    # hip_swing_left / hip_swing_right commented out — uncomment if gait stalls
 
     # ── 6. Gait system — H1-style foot contact pattern + clearance ──────
     feet_gait = RewTerm(
@@ -328,14 +307,14 @@ class RewardsCfg:
     )
     foot_clearance = RewTerm(
         func=mdp.foot_clearance_reward,
-        weight=1.5,                    # was 3.0 — too strong vs tracking, caused marching-in-place
+        weight=0.8,                    # relaxed — tracking is the priority
         params={
             "asset_cfg": SceneEntityCfg(
                 "robot",
                 body_names=[".*_ankle_roll_link"],
             ),
-            "target_height": 0.07,     # 7cm — lift a bit higher
-            "std": 0.01,               # sharp — small errors matter
+            "target_height": 0.06,     # 6cm
+            "std": 0.015,               # softer tolerance
             "tanh_mult": 2.0,
         },
     )
@@ -354,19 +333,9 @@ class RewardsCfg:
         },
     )
 
-    # ── 7. Forward swing + lift-off ─────────────────────────────────────
-    foot_swing_forward = RewTerm(
-        func=mdp.foot_swing_forward,
-        weight=0.4,                    # reduced — clearance does the heavy lifting
-        params={
-            "asset_cfg": SceneEntityCfg("robot"),
-            "sensor_cfg": SceneEntityCfg(
-                "contact_forces",
-                body_names=[".*_ankle_roll_link"],
-            ),
-            "threshold": 1.0,
-        },
-    )
+    # ── 7. Foot swing — disabled (conflicting with clearance+gait) ──────
+    # foot_swing_forward commented out — uncomment if feet don't swing forward
+
     # ── 8. Foot tilt — always on, stance + swing ──────────────────────
     foot_tilt = RewTerm(
         func=mdp.foot_tilt_penalty,
@@ -415,7 +384,7 @@ class TerminationsCfg:
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
-                body_names=["base_link"],
+                body_names=["base_link", ".*_knee_.*", ".*_thigh_.*"],
             ),
             "threshold": 1.0,
         },

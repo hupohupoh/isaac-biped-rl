@@ -279,7 +279,17 @@ def foot_clearance_reward(
     tilt = torch.norm(gravity_foot[..., :2], dim=-1)                         # [N, feet]
     flatness = torch.exp(-torch.sum(tilt, dim=-1) / 0.1)                     # 1 when flat, <1 when tilted
 
-    return height_reward * flatness
+    # --- Forward velocity gate — clearance only counts when moving forward ---
+    q = asset.data.root_quat_w  # [N, 4] (x, y, z, w)
+    qx, qy, qz, qw = q[:, 0], q[:, 1], q[:, 2], q[:, 3]
+    fx = 1.0 - 2.0 * (qy * qy + qz * qz)
+    fy = 2.0 * (qx * qy + qw * qz)
+    fz = 2.0 * (qx * qz - qw * qy)
+    forward_w = torch.stack([fx, fy, fz], dim=-1)
+    body_fwd_speed = (asset.data.root_lin_vel_w * forward_w).sum(dim=-1)
+    fwd_gate = torch.sigmoid((body_fwd_speed - 0.05) * 30.0)  # 0 at rest, 1 when walking
+
+    return height_reward * flatness * fwd_gate
 
 
 def feet_air_time_gated(

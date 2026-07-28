@@ -175,7 +175,7 @@ class CommandsCfg:
         heading_control_stiffness=0.5,
         debug_vis=False,
         ranges=mdp.UniformVelocityCommandCfg.Ranges(
-            lin_vel_x=(0.0, 1.0),     # forward only — no backward
+            lin_vel_x=(0.0, 1.2),     # forward only — slight speed boost
             lin_vel_y=(0.0, 0.0),     # no lateral
             ang_vel_z=(0.0, 0.0),     # no yaw — force learning translation
             heading=(0.0, 0.0),       # go straight

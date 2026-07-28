@@ -202,12 +202,12 @@ class RewardsCfg:
     # ── 1. Velocity tracking ───────────────────────────────────────────
     track_lin_vel_xy_exp = RewTerm(
         func=mdp.track_lin_vel_xy_exp,
-        weight=3.0,
+        weight=4.0,
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
     track_ang_vel_z_exp = RewTerm(
         func=mdp.track_ang_vel_z_exp,
-        weight=0.8,                    # boosted — anti-spin, don't turn for reward
+        weight=1.0,                    # anti-spin — turning costs a full point
         params={"command_name": "base_velocity", "std": math.sqrt(0.25)},
     )
 
@@ -341,7 +341,7 @@ class RewardsCfg:
     )
     feet_slide = RewTerm(
         func=mdp.feet_slide,
-        weight=-0.1,                   # H1=-0.2; lighter for small robot
+        weight=-0.25,                  # aligned with H1 — shuffle hurts
         params={
             "sensor_cfg": SceneEntityCfg(
                 "contact_forces",
